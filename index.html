@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA CV — Intelligent CV System</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/600.css">
+<style>
+:root{
+  --violet:#5A48F5; --violet-d:#4434d6; --violet-l:#eceaff;
+  --ink:#0e1030; --ink-2:#3c4060; --mute:#6b7089;
+  --bg:#fbfbfe; --card:#ffffff; --line:#e7e7f2;
+  --amber:#ffb020; --teal:#0fb5a3; --coral:#ff6b5e;
+  --r-lg:22px; --r-md:14px;
+  --shadow-lg:0 24px 60px -18px rgba(14,16,48,.18);
+  --shadow-md:0 10px 30px -10px rgba(14,16,48,.14);
+  --font-head:'Sora',sans-serif; --font-body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.15;letter-spacing:-.02em}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);background:var(--violet-l);padding:7px 14px;border-radius:99px;margin-bottom:18px}
+.eyebrow::before{content:"✦";font-size:11px}
+.sec-title{font-size:clamp(28px,4vw,42px);font-weight:700}
+.sec-sub{color:var(--mute);font-size:17px;max-width:640px;margin-top:14px}
+.sec-head{text-align:center;display:flex;flex-direction:column;align-items:center;margin-bottom:56px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:600;font-size:15px;border-radius:12px;padding:14px 26px;transition:transform .2s,box-shadow .2s,background .2s;white-space:nowrap}
+.btn-primary{background:var(--violet);color:#fff;box-shadow:0 10px 24px -8px rgba(90,72,245,.5)}
+.btn-primary:hover{background:var(--violet-d);transform:translateY(-2px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-2px)}
+.btn-light{background:#fff;color:var(--ink)}
+.btn-light:hover{transform:translateY(-2px)}
+.btn-sm{padding:10px 18px;font-size:14px}
+
+/* ============ HEADER ============ */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,box-shadow .3s;background:transparent}
+header.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 8px 24px -16px rgba(14,16,48,.12)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo-mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--violet),#8a5cff);display:grid;place-items:center;color:#fff;font-size:16px;box-shadow:0 6px 16px -6px rgba(90,72,245,.6)}
+.logo em{font-style:normal;color:var(--violet)}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{font-size:15px;font-weight:500;color:var(--ink-2);transition:color .2s}
+.nav-links a:hover{color:var(--violet)}
+.nav-cta{display:flex;align-items:center;gap:14px}
+.nav-cta .signin{font-weight:600;font-size:15px;color:var(--ink-2)}
+.nav-cta .signin:hover{color:var(--violet)}
+.burger{display:none;flex-direction:column;gap:5px;padding:6px}
+.burger span{width:24px;height:2.5px;background:var(--ink);border-radius:2px;transition:.3s}
+.mobile-menu{display:none;position:fixed;top:76px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);z-index:99;padding:18px 24px 26px;flex-direction:column;gap:4px}
+.mobile-menu a{padding:12px 4px;font-weight:600;font-size:16px;border-bottom:1px solid var(--line)}
+.mobile-menu .btn{margin-top:14px}
+.mobile-menu.open{display:flex}
+.burger.active span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.burger.active span:nth-child(2){opacity:0}
+.burger.active span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+/* ============ HERO ============ */
+.hero{padding:170px 0 90px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-260px;right:-220px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(90,72,245,.14),transparent 65%)}
+.hero::after{content:"";position:absolute;bottom:-300px;left:-260px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,176,32,.12),transparent 65%)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(36px,5vw,58px);font-weight:800;margin:18px 0 20px}
+.hero h1 .grad{background:linear-gradient(90deg,var(--violet),#9a5cff 60%,var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:18px;color:var(--mute);max-width:520px;margin-bottom:32px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.hero-note{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mute)}
+.hero-note .stars{color:var(--amber);letter-spacing:2px}
+.hero-visual{position:relative}
+.hero-visual img{border-radius:18px;box-shadow:var(--shadow-lg);margin:0 auto;max-height:640px;object-fit:cover;animation:floaty 7s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(.4deg)}}
+.float-badge{position:absolute;background:#fff;border-radius:14px;box-shadow:var(--shadow-md);padding:12px 18px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;animation:floaty 6s ease-in-out infinite}
+.fb-1{top:8%;left:-4%;animation-delay:1.2s}
+.fb-2{bottom:12%;right:-3%;animation-delay:2.4s}
+.fb-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px}
+.fb-1 .fb-ic{background:#e8f9f5;color:var(--teal)}
+.fb-2 .fb-ic{background:var(--violet-l);color:var(--violet)}
+
+/* ============ MARQUEE ============ */
+.marquee-wrap{padding:26px 0 40px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff}
+.marquee-label{text-align:center;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:22px}
+.marquee{overflow:hidden;position:relative}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:110px;z-index:2;pointer-events:none}
+.marquee::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.marquee::after{right:0;background:linear-gradient(-90deg,#fff,transparent)}
+.marquee-track{display:flex;gap:70px;width:max-content;animation:scroll 30s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.m-logo{font-family:var(--font-head);font-weight:700;font-size:19px;color:#a2a6bf;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.m-logo i{font-style:normal;font-size:15px}
+
+/* ============ STATS ============ */
+.stats{padding:70px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.stat-num{font-family:var(--font-head);font-size:clamp(32px,4vw,46px);font-weight:800;color:var(--violet)}
+.stat-lbl{color:var(--mute);font-size:14.5px;margin-top:6px}
+
+/* ============ FEATURES ============ */
+.features{background:#fff}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px 28px;transition:transform .25s,box-shadow .25s,border-color .25s}
+.feat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);border-color:transparent}
+.feat-ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:24px;margin-bottom:20px}
+.fi-1{background:var(--violet-l)} .fi-2{background:#fff3dd} .fi-3{background:#e8f9f5}
+.fi-4{background:#ffe9e7} .fi-5{background:#e8f0ff} .fi-6{background:#f3e8ff}
+.feat-card h3{font-size:19px;font-weight:700;margin-bottom:10px}
+.feat-card p{color:var(--mute);font-size:15px}
+
+/* ============ TEMPLATES ============ */
+.filter-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:44px}
+.filter-btn{padding:10px 22px;border-radius:99px;font-size:14px;font-weight:600;color:var(--ink-2);background:#fff;border:1.5px solid var(--line);transition:.2s}
+.filter-btn:hover{border-color:var(--violet);color:var(--violet)}
+.filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.tpl-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:transform .3s,box-shadow .3s,opacity .3s;position:relative}
+.tpl-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.tpl-card.hidden{display:none}
+.tpl-img{overflow:hidden;aspect-ratio:4/4.4;background:#f2f2f8}
+.tpl-img img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s}
+.tpl-card:hover .tpl-img img{transform:scale(1.05)}
+.tpl-body{padding:18px 20px;display:flex;align-items:center;justify-content:space-between}
+.tpl-body h3{font-size:16.5px;font-weight:700}
+.tpl-tag{font-size:12px;font-weight:600;color:var(--violet);background:var(--violet-l);padding:4px 12px;border-radius:99px}
+.tpl-use{position:absolute;inset:0;background:rgba(14,16,48,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.tpl-card:hover .tpl-use{opacity:1}
+
+/* ============ LIVE EDITOR ============ */
+.editor-sec{background:linear-gradient(180deg,#fff, #f4f3ff)}
+.editor-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}
+.editor-panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:32px;box-shadow:var(--shadow-md);position:sticky;top:100px}
+.editor-panel h3{font-size:20px;margin-bottom:6px}
+.editor-panel .hint{font-size:14px;color:var(--mute);margin-bottom:24px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);margin-bottom:8px}
+.field input[type=text]{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:13px 15px;font-size:15px;font-family:inherit;transition:border .2s,box-shadow .2s;background:var(--bg)}
+.field input[type=text]:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 4px rgba(90,72,245,.12)}
+.swatches{display:flex;gap:12px}
+.swatch{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line);transition:.2s;cursor:pointer}
+.swatch.active{box-shadow:0 0 0 2.5px var(--violet);transform:scale(1.1)}
+.ai-btn{width:100%;margin-top:6px}
+.ai-btn .spark{display:inline-block;transition:transform .4s}
+.ai-btn:hover .spark{transform:rotate(180deg)}
+/* preview */
+.resume-preview{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;--pv:#5A48F5;--pv-soft:#eceaff;font-family:var(--font-body)}
+.pv-top{height:10px;background:var(--pv)}
+.pv-inner{padding:34px 38px}
+.pv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:18px;border-bottom:2px solid var(--pv-soft)}
+.pv-name{font-family:var(--font-head);font-size:26px;font-weight:800;color:var(--pv)}
+.pv-title{font-size:15px;font-weight:600;color:var(--ink-2);margin-top:3px}
+.pv-contact{font-size:12px;color:var(--mute);text-align:right;line-height:1.8}
+.pv-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:28px;padding-top:20px}
+.pv-sec-t{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pv);margin-bottom:10px}
+.pv-summary{font-size:13px;color:var(--ink-2);min-height:78px}
+.pv-summary.typing::after{content:"▍";color:var(--pv);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+.pv-job{margin-bottom:14px}
+.pv-job b{font-size:13.5px;display:block}
+.pv-job span{font-size:12px;color:var(--mute)}
+.pv-job p{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.pv-skill{display:inline-block;font-size:11.5px;font-weight:600;background:var(--pv-soft);color:var(--pv);padding:5px 12px;border-radius:99px;margin:0 6px 8px 0}
+.pv-bar{height:6px;background:var(--pv-soft);border-radius:99px;margin-bottom:10px;overflow:hidden}
+.pv-bar i{display:block;height:100%;background:var(--pv);border-radius:99px}
+
+/* ============ STEPS ============ */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;position:relative}
+.step-card{text-align:center;padding:38px 28px;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);position:relative}
+.step-num{width:56px;height:56px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--font-head);font-weight:800;font-size:20px;display:grid;place-items:center;margin:0 auto 20px;position:relative}
+.step-card h3{font-size:19px;margin-bottom:10px}
+.step-card p{color:var(--mute);font-size:15px}
+.step-arrow{position:absolute;top:50%;font-size:22px;color:#c9c9dd;z-index:2}
+
+/* ============ AI DARK ============ */
+.ai-sec{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.ai-sec::before{content:"";position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(90,72,245,.35),transparent 70%)}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative}
+.ai-sec .eyebrow{background:rgba(90,72,245,.25);color:#b9aaff}
+.ai-sec h2{font-size:clamp(28px,3.6vw,40px);font-weight:700}
+.ai-sec p.lead{color:#a9adcc;margin:16px 0 30px;font-size:16.5px}
+.ai-list{list-style:none;display:flex;flex-direction:column;gap:16px}
+.ai-list li{display:flex;gap:14px;align-items:flex-start;font-size:15.5px;color:#dcdff2}
+.ai-check{flex:0 0 26px;height:26px;border-radius:8px;background:rgba(15,181,163,.18);color:var(--teal);display:grid;place-items:center;font-size:13px;margin-top:2px}
+.ai-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:30px;backdrop-filter:blur(8px)}
+.ai-card .q{font-size:13px;color:#8f93b5;margin-bottom:12px}
+.ai-bubble{background:rgba(90,72,245,.22);border:1px solid rgba(138,92,255,.4);border-radius:14px 14px 14px 4px;padding:16px 18px;font-size:14px;color:#e6e4ff;margin-bottom:22px}
+.ai-metric{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid rgba(255,255,255,.09);font-size:14px}
+.ai-metric b{font-family:var(--font-head)}
+.score-pill{padding:4px 14px;border-radius:99px;font-weight:700;font-size:13px}
+.sp-good{background:rgba(15,181,163,.2);color:#5eead4}
+.sp-warn{background:rgba(255,176,32,.18);color:#ffd27a}
+
+/* ============ TESTIMONIALS ============ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;display:flex;flex-direction:column;gap:18px;transition:transform .25s,box-shadow .25s}
+.testi-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md)}
+.testi-stars{color:var(--amber);letter-spacing:3px;font-size:15px}
+.testi-card p{font-size:15px;color:var(--ink-2);flex:1}
+.testi-who{display:flex;align-items:center;gap:13px}
+.testi-ava{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:#fff}
+.testi-who b{display:block;font-size:14.5px}
+.testi-who span{font-size:13px;color:var(--mute)}
+
+/* ============ PRICING ============ */
+.pricing{background:#fff}
+.bill-toggle{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;font-weight:600;font-size:15px}
+.toggle-track{width:58px;height:32px;border-radius:99px;background:var(--ink);position:relative;cursor:pointer;transition:background .3s}
+.toggle-knob{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .3s}
+.toggle-track.yearly .toggle-knob{left:30px}
+.save-chip{background:#e8f9f5;color:var(--teal);font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px}
+.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;max-width:860px;margin:0 auto}
+.price-card{border:1.5px solid var(--line);border-radius:var(--r-lg);padding:38px 34px;position:relative;background:var(--bg)}
+.price-card.popular{border-color:var(--violet);background:#fff;box-shadow:0 24px 60px -20px rgba(90,72,245,.3)}
+.pop-chip{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--violet),#8a5cff);color:#fff;font-size:12.5px;font-weight:700;padding:6px 18px;border-radius:99px;letter-spacing:.06em}
+.price-card h3{font-size:20px;margin-bottom:6px}
+.price-card .p-desc{font-size:14px;color:var(--mute);margin-bottom:24px}
+.price-amt{font-family:var(--font-head);font-size:48px;font-weight:800}
+.price-amt small{font-size:15px;font-weight:500;color:var(--mute);font-family:var(--font-body)}
+.price-note{font-size:13px;color:var(--mute);margin:4px 0 26px;min-height:20px}
+.p-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.p-list li{display:flex;gap:11px;font-size:14.5px;color:var(--ink-2)}
+.p-list li::before{content:"✓";color:var(--teal);font-weight:800}
+.p-list li.no{opacity:.45}
+.p-list li.no::before{content:"—";color:var(--mute)}
+.price-card .btn{width:100%}
+
+/* ============ FAQ ============ */
+.faq-wrap{max-width:780px;margin:0 auto}
+.faq-item{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:box-shadow .25s}
+.faq-item.open{box-shadow:var(--shadow-md);border-color:var(--violet-l)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 26px;font-size:16.5px;font-weight:600;font-family:var(--font-head);text-align:left}
+.faq-ic{flex:0 0 30px;height:30px;border-radius:50%;background:var(--violet-l);color:var(--violet);display:grid;place-items:center;font-size:17px;transition:transform .3s}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-a p{padding:0 26px 24px;color:var(--mute);font-size:15px}
+
+/* ============ CTA ============ */
+.cta-sec{padding:40px 0 110px}
+.cta-box{background:linear-gradient(120deg,var(--violet),#7a4dfc 55%,#9a5cff);border-radius:28px;padding:70px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.cta-box::before{content:"✦";position:absolute;font-size:220px;opacity:.1;top:-60px;left:-30px}
+.cta-box::after{content:"✦";position:absolute;font-size:160px;opacity:.12;bottom:-50px;right:-10px}
+.cta-box h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:14px}
+.cta-box p{font-size:17px;opacity:.9;max-width:560px;margin:0 auto 34px}
+.cta-box .fine{font-size:13px;opacity:.75;margin-top:18px}
+
+/* ============ FOOTER ============ */
+footer{background:var(--ink);color:#a9adcc;padding:70px 0 34px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:44px;margin-bottom:54px}
+.foot-brand p{font-size:14.5px;margin:16px 0 22px;max-width:280px}
+.foot-social{display:flex;gap:12px}
+.foot-social a{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.07);display:grid;place-items:center;font-size:15px;transition:.2s}
+.foot-social a:hover{background:var(--violet);color:#fff;transform:translateY(-3px)}
+.foot-col h4{color:#fff;font-size:15px;margin-bottom:18px}
+.foot-col a{display:block;font-size:14.5px;margin-bottom:12px;transition:color .2s}
+.foot-col a:hover{color:#fff}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13.5px}
+
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1020px){
+  .hero-grid,.editor-grid,.ai-grid{grid-template-columns:1fr;gap:48px}
+  .editor-panel{position:static}
+  .feat-grid,.tpl-grid,.testi-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:36px}
+  .steps-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto}
+  .step-arrow{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  .nav-links,.nav-cta .signin,.nav-cta .btn-ghost{display:none}
+  .burger{display:flex}
+  section{padding:70px 0}
+  .hero{padding:130px 0 60px}
+  .feat-grid,.tpl-grid,.testi-grid,.price-grid{grid-template-columns:1fr}
+  .pv-cols{grid-template-columns:1fr}
+  .pv-head{flex-direction:column}
+  .pv-contact{text-align:left}
+  .fb-1{left:0}.fb-2{right:0}
+  .foot-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header id="siteHeader">
+  <div class="container nav">
+    <a href="#" class="logo"><span class="logo-mark">✦</span>NOVA<em>CV</em></a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#templates">Templates</a></li>
+      <li><a href="#editor">Live Editor</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#" class="signin">Sign in</a>
+      <a href="#editor" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="#cta" class="btn btn-primary btn-sm">Create my CV</a>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">Features</a>
+  <a href="#templates">Templates</a>
+  <a href="#editor">Live Editor</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <a href="#cta" class="btn btn-primary">Create my CV — it's free</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="container hero-grid">
+    <div class="reveal in">
+      <span class="eyebrow">NOVA CV · Intelligent CV System</span>
+      <h1>Build a brilliant CV in minutes, <span class="grad">not weekends.</span></h1>
+      <p class="lead">NOVA CV pairs recruiter-approved templates with an intelligent writing assistant that turns your experience into interview-winning words. Free to start, effortless to love.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-primary">Create my CV for free →</a>
+        <a href="#templates" class="btn btn-ghost">Browse templates</a>
+      </div>
+      <div class="hero-note"><span class="stars">★★★★★</span> 4.9/5 from 32,000+ job seekers · No credit card required</div>
+    </div>
+    <div class="hero-visual reveal in d2">
+      <img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/1e7c63092-912d-4ee2-a5f4-8c9d4c6f7b47.png" alt="CV created with NOVA CV">
+      <div class="float-badge fb-1"><span class="fb-ic">✓</span> ATS score 96/100</div>
+      <div class="float-badge fb-2"><span class="fb-ic">✦</span> AI summary written</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee-wrap">
+  <p class="marquee-label">Our users now work at</p>
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="m-logo"><i>◆</i>Northwind</span>
+      <span class="m-logo"><i>●</i>Lumina Labs</span>
+      <span class="m-logo"><i>▲</i>Vertex.io</span>
+      <span class="m-logo"><i>✦</i>Halcyon</span>
+      <span class="m-logo"><i>■</i>Brightpath</span>
+      <span class="m-logo"><i>◗</i>Orbital</span>
+      <span class="m-logo"><i>✚</i>Kite &amp; Co</span>
+      <span class="m-logo"><i>◇</i>Fernworks</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= STATS ================= -->
+<div class="stats">
+  <div class="container stats-grid">
+    <div class="reveal"><div class="stat-num" data-count="1.4" data-decimals="1" data-suffix="M+">0</div><div class="stat-lbl">CVs created on NOVA</div></div>
+    <div class="reveal d1"><div class="stat-num" data-count="94" data-suffix="%">0</div><div class="stat-lbl">Pass automated screening</div></div>
+    <div class="reveal d2"><div class="stat-num" data-count="48" data-suffix="">0</div><div class="stat-lbl">Designer-made templates</div></div>
+    <div class="reveal d3"><div class="stat-num" data-count="4.9" data-decimals="1" data-suffix="/5">0</div><div class="stat-lbl">Average user rating</div></div>
+  </div>
+</div>
+
+<!-- ================= FEATURES ================= -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Why NOVA CV</span>
+      <h2 class="sec-title">Everything you need to get hired faster</h2>
+      <p class="sec-sub">One intelligent workspace that writes, designs and optimizes your CV — so you can focus on landing the job.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal"><div class="feat-ic fi-1">✦</div><h3>Intelligent Writer</h3><p>Stuck on a bullet point? NOVA suggests sharp, results-driven phrasing tailored to your role and industry in one click.</p></div>
+      <div class="feat-card reveal d1"><div class="feat-ic fi-2">▤</div><h3>Recruiter-Approved Templates</h3><p>Every layout is designed with hiring professionals and tested against real screening software before it reaches you.</p></div>
+      <div class="feat-card reveal d2"><div class="feat-ic fi-3">◎</div><h3>Real-Time ATS Check</h3><p>Watch your compatibility score climb as you edit. NOVA flags missing keywords before a robot ever reads your CV.</p></div>
+      <div class="feat-card reveal"><div class="feat-ic fi-4">⇄</div><h3>One-Click Tailoring</h3><p>Paste any job description and NOVA re-orders your highlights to mirror what that exact employer cares about.</p></div>
+      <div class="feat-card reveal d1"><div class="feat-ic fi-5">🌐</div><h3>30+ Languages</h3><p>Write, translate and switch languages instantly — perfect for international applications, with correct typography built in.</p></div>
+      <div class="feat-card reveal d2"><div class="feat-ic fi-6">⬇</div><h3>Free PDF Export</h3><p>Download a pixel-perfect, print-ready PDF anytime. No watermarks on the free plan, no surprises, ever.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TEMPLATES ================= -->
+<section id="templates">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Template Gallery</span>
+      <h2 class="sec-title">Pick a look that gets you noticed</h2>
+      <p class="sec-sub">From boardroom-classic to studio-bold — swap templates anytime without retyping a single word.</p>
+    </div>
+    <div class="filter-bar reveal">
+      <button class="filter-btn active" data-filter="all">All templates</button>
+      <button class="filter-btn" data-filter="professional">Professional</button>
+      <button class="filter-btn" data-filter="minimal">Minimal</button>
+      <button class="filter-btn" data-filter="creative">Creative</button>
+      <button class="filter-btn" data-filter="ats">ATS-Friendly</button>
+    </div>
+    <div class="tpl-grid" id="tplGrid">
+      <div class="tpl-card reveal" data-cat="professional">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/15c909277-4a9e-4f7d-95e1-ccd94a11526f.png" alt="Aurora template"></div>
+        <div class="tpl-body"><h3>Aurora</h3><span class="tpl-tag">Professional</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+      <div class="tpl-card reveal d1" data-cat="minimal ats">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/10077b6cf-67d4-4237-aa91-45ce2a1f9a4c.png" alt="Slate template"></div>
+        <div class="tpl-body"><h3>Slate</h3><span class="tpl-tag">Minimal</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+      <div class="tpl-card reveal d2" data-cat="professional minimal">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/18209c56a-2d1c-487f-b10a-665ad0654273.png" alt="Heritage template"></div>
+        <div class="tpl-body"><h3>Heritage</h3><span class="tpl-tag">Executive</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+      <div class="tpl-card reveal" data-cat="creative">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/15600e53e-13e4-461f-912a-f81c7926945d.png" alt="Prism template"></div>
+        <div class="tpl-body"><h3>Prism</h3><span class="tpl-tag">Creative</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+      <div class="tpl-card reveal d1" data-cat="creative professional">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/1deb29140-b110-430a-9817-2c0287dcacd5.png" alt="Onyx template"></div>
+        <div class="tpl-body"><h3>Onyx</h3><span class="tpl-tag">Dark Mode</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+      <div class="tpl-card reveal d2" data-cat="ats professional">
+        <div class="tpl-img"><img src="https://image.qwenlm.ai/public_source/daed9ef9-eddd-4d64-8d70-9bacfd5234db/1ada5b40a-b14a-463d-8989-e5e1257fea89.png" alt="Beacon template"></div>
+        <div class="tpl-body"><h3>Beacon</h3><span class="tpl-tag">ATS-Friendly</span></div>
+        <div class="tpl-use"><a href="#editor" class="btn btn-light btn-sm">Use this template</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LIVE EDITOR ================= -->
+<section class="editor-sec" id="editor">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Try it right here</span>
+      <h2 class="sec-title">The intelligent editor, live in your browser</h2>
+      <p class="sec-sub">Type your name, pick an accent, and let the AI draft your professional summary. The preview updates as you type.</p>
+    </div>
+    <div class="editor-grid">
+      <div class="editor-panel reveal">
+        <h3>Your details</h3>
+        <p class="hint">This is a live demo — everything updates instantly.</p>
+        <div class="field">
+          <label for="inName">Full name</label>
+          <input type="text" id="inName" placeholder="e.g. Alex Morgan" maxlength="28">
+        </div>
+        <div class="field">
+          <label for="inTitle">Job title</label>
+          <input type="text" id="inTitle" placeholder="e.g. Product Designer" maxlength="38">
+        </div>
+        <div class="field">
+          <label>Accent color</label>
+          <div class="swatches" id="swatches">
+            <button class="swatch active" data-c="#5A48F5" data-soft="#eceaff" style="background:#5A48F5" aria-label="Violet"></button>
+            <button class="swatch" data-c="#0fb5a3" data-soft="#e0f6f2" style="background:#0fb5a3" aria-label="Teal"></button>
+            <button class="swatch" data-c="#e0475b" data-soft="#fde8ea" style="background:#e0475b" aria-label="Coral"></button>
+            <button class="swatch" data-c="#1f2340" data-soft="#e9eaf2" style="background:#1f2340" aria-label="Navy"></button>
+            <button class="swatch" data-c="#c07a10" data-soft="#faf0dd" style="background:#c07a10" aria-label="Amber"></button>
+          </div>
+        </div>
+        <button class="btn btn-primary ai-btn" id="aiWriteBtn"><span class="spark">✦</span> Let AI write my summary</button>
+      </div>
+
+      <div class="resume-preview reveal d1" id="resumePreview">
+        <div class="pv-top"></div>
+        <div class="pv-inner">
+          <div class="pv-head">
+            <div>
+              <div class="pv-name" id="pvName">Alex Morgan</div>
+              <div class="pv-title" id="pvTitle">Product Designer</div>
+            </div>
+            <div class="pv-contact">hello@alexmorgan.design<br>+1 (555) 010-2288<br>San Francisco, CA</div>
+          </div>
+          <div class="pv-cols">
+            <div>
+              <div class="pv-sec-t">Professional Summary</div>
+              <p class="pv-summary" id="pvSummary">Press the AI button and watch a tailored summary appear here, word by word — just like the real editor.</p>
+              <div class="pv-sec-t" style="margin-top:20px">Experience</div>
+              <div class="pv-job"><b>Senior Product Designer</b><span>Lumina Labs · 2022 — Present</span><p>Led redesign of the core dashboard, lifting activation by 31%.</p></div>
+              <div class="pv-job"><b>UI Designer</b><span>Brightpath · 2019 — 2022</span><p>Shipped a 200-component design system used by 4 squads.</p></div>
+            </div>
+            <div>
+              <div class="pv-sec-t">Skills</div>
+              <span class="pv-skill">Figma</span><span class="pv-skill">Prototyping</span><span class="pv-skill">UX Research</span><span class="pv-skill">Design Systems</span>
+              <div class="pv-sec-t" style="margin-top:18px">Strength</div>
+              <div class="pv-bar"><i style="width:92%"></i></div>
+              <div class="pv-bar"><i style="width:84%"></i></div>
+              <div class="pv-bar"><i style="width:76%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STEPS ================= -->
+<section>
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2 class="sec-title">Hired in three simple steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal"><div class="step-num">1</div><h3>Choose a template</h3><p>Pick from 48 recruiter-approved designs. Every one is screening-software safe.</p></div>
+      <div class="step-card reveal d1"><div class="step-num">2</div><h3>Write with AI assist</h3><p>Answer simple prompts and NOVA turns them into crisp, achievement-focused bullet points.</p></div>
+      <div class="step-card reveal d2"><div class="step-num">3</div><h3>Download &amp; apply</h3><p>Export a polished PDF in one click, then tailor it per job with a single extra click.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AI DARK ================= -->
+<section class="ai-sec">
+  <div class="container ai-grid">
+    <div class="reveal">
+      <span class="eyebrow">NOVA Intelligence</span>
+      <h2>Your CV, coached by a system that has read 1.4 million of them.</h2>
+      <p class="lead">NOVA's engine studies what made successful CVs successful — then applies those patterns to yours, privately and instantly.</p>
+      <ul class="ai-list">
+        <li><span class="ai-check">✓</span>Keyword matching against any job description you paste</li>
+        <li><span class="ai-check">✓</span>Tone calibration: confident, never arrogant, always human</li>
+        <li><span class="ai-check">✓</span>Impact rewriting — verbs and numbers where recruiters look</li>
+        <li><span class="ai-check">✓</span>Layout guardrails that keep every page scannable in 7 seconds</li>
+      </ul>
+    </div>
+    <div class="ai-card reveal d1">
+      <div class="q">LIVE ANALYSIS · product-manager-role.pdf</div>
+      <div class="ai-bubble">✦ &nbsp;Suggestion: quantify your launch — "grew weekly active users 42% in one quarter" outperforms "responsible for growth".</div>
+      <div class="ai-metric"><span>ATS compatibility</span><span class="score-pill sp-good">96 / 100</span></div>
+      <div class="ai-metric"><span>Keyword coverage</span><span class="score-pill sp-good">18 / 20</span></div>
+      <div class="ai-metric"><span>Readability</span><span class="score-pill sp-good">Excellent</span></div>
+      <div class="ai-metric"><span>Length</span><span class="score-pill sp-warn">Trim 2 lines</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section>
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Success stories</span>
+      <h2 class="sec-title">People land jobs with NOVA every day</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p>"I sent out applications for months with silence. Rebuilt my CV on NOVA on a Sunday — three interviews the same week. The AI phrasing suggestions are scary good."</p><div class="testi-who"><span class="testi-ava" style="background:#5A48F5">MK</span><div><b>Maya K.</b><span>Data Analyst → hired at a fintech startup</span></div></div></div>
+      <div class="testi-card reveal d1"><div class="testi-stars">★★★★★</div><p>"The ATS score showed me exactly why robots were rejecting me. Fixed six keywords, got shortlisted at two companies I'd already given up on."</p><div class="testi-who"><span class="testi-ava" style="background:#0fb5a3">DR</span><div><b>Daniel R.</b><span>Operations Manager</span></div></div></div>
+      <div class="testi-card reveal d2"><div class="testi-stars">★★★★★</div><p>"As a career changer I didn't know what to emphasize. The tailoring tool re-framed ten years of teaching into a compelling UX research story."</p><div class="testi-who"><span class="testi-ava" style="background:#e0475b">AS</span><div><b>Amira S.</b><span>Teacher → UX Researcher</span></div></div></div>
+      <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p>"Clean, fast, zero watermarks on the free export. I've already recommended it to my whole graduating class."</p><div class="testi-who"><span class="testi-ava" style="background:#c07a10">JT</span><div><b>Jordan T.</b><span>New-grad Software Engineer</span></div></div></div>
+      <div class="testi-card reveal d1"><div class="testi-stars">★★★★★</div><p>"Switching between a creative portfolio CV and a conservative banking CV took one click. Same content, two completely right impressions."</p><div class="testi-who"><span class="testi-ava" style="background:#1f2340">LP</span><div><b>Lena P.</b><span>Marketing Lead</span></div></div></div>
+      <div class="testi-card reveal d2"><div class="testi-stars">★★★★★</div><p>"The 7-second readability check changed how I write everything now — including my LinkedIn. Recruiters actually reply."</p><div class="testi-who"><span class="testi-ava" style="background:#7a4dfc">OB</span><div><b>Omar B.</b><span>Civil Engineer</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="sec-title">Start free. Upgrade when you're ready.</h2>
+    </div>
+    <div class="bill-toggle reveal">
+      <span id="lblMonthly" style="color:var(--ink)">Monthly</span>
+      <div class="toggle-track" id="billToggle" role="switch" aria-checked="false"><div class="toggle-knob"></div></div>
+      <span id="lblYearly">Yearly</span>
+      <span class="save-chip">Save 33%</span>
+    </div>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <h3>Starter</h3>
+        <p class="p-desc">Everything you need to build one great CV.</p>
+        <div class="price-amt">$0 <small>/ forever</small></div>
+        <p class="price-note">Free forever, no card required</p>
+        <ul class="p-list">
+          <li>1 CV &amp; 6 core templates</li>
+          <li>PDF download without watermark</li>
+          <li>Basic AI summary (3 per month)</li>
+          <li>Standard ATS check</li>
+          <li class="no">Job-specific tailoring</li>
+          <li class="no">Cover letter builder</li>
+        </ul>
+        <a href="#cta" class="btn btn-ghost">Start for free</a>
+      </div>
+      <div class="price-card popular reveal d1">
+        <span class="pop-chip">MOST POPULAR</span>
+        <h3>NOVA Pro</h3>
+        <p class="p-desc">The full intelligent system for serious job hunting.</p>
+        <div class="price-amt">$<span id="proPrice">9</span> <small id="proPer">/ month</small></div>
+        <p class="price-note" id="proNote">Billed monthly, cancel anytime</p>
+        <ul class="p-list">
+          <li>Unlimited CVs &amp; all 48 templates</li>
+          <li>Unlimited AI writing &amp; rewriting</li>
+          <li>Real-time ATS score + keyword match</li>
+          <li>One-click job tailoring</li>
+          <li>Matching cover letter builder</li>
+          <li>30+ languages &amp; priority support</li>
+        </ul>
+        <a href="#cta" class="btn btn-primary">Go Pro →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="sec-title">Questions, answered</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item reveal"><button class="faq-q">Is NOVA CV really free to use?<span class="faq-ic">+</span></button><div class="faq-a"><p>Yes. The Starter plan lets you build a complete CV and download it as a clean, watermark-free PDF at no cost. Pro adds unlimited AI writing, all templates and tailoring tools for power job-hunters.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q">Will my CV pass applicant tracking systems (ATS)?<span class="faq-ic">+</span></button><div class="faq-a"><p>Every template is built with parse-safe structure, and the live ATS checker scores your content against real screening criteria as you type, so you always know where you stand before you apply.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q">How does the AI writing assistant work?<span class="faq-ic">+</span></button><div class="faq-a"><p>You describe what you did in plain language; NOVA rewrites it into concise, achievement-focused bullet points with strong verbs and measurable impact, matched to the tone of your target role. You stay in control — accept, edit or regenerate any suggestion.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q">Can I switch templates after I've written my CV?<span class="faq-ic">+</span></button><div class="faq-a"><p>Absolutely. Your content lives separately from the design, so switching between any of the 48 templates takes one click — no copy-pasting, no reformatting.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q">Is my personal data safe?<span class="faq-ic">+</span></button><div class="faq-a"><p>Your data is encrypted in transit and at rest, never sold, and never used to train models without explicit opt-in. You can export or permanently delete everything at any time.</p></div></div>
+      <div class="faq-item reveal"><button class="faq-q">Can I cancel my Pro subscription anytime?<span class="faq-ic">+</span></button><div class="faq-a"><p>Yes — cancel in two clicks from your dashboard. Your CVs remain fully editable and downloadable on the free plan afterwards.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta-sec" id="cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Your next job starts with a better CV.</h2>
+      <p>Join over a million people who built their way to interviews with the NOVA CV Intelligent CV System.</p>
+      <a href="#editor" class="btn btn-light" style="font-size:16px;padding:16px 34px">Create my CV for free →</a>
+      <p class="fine">Free forever plan · No credit card · 5-minute setup</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="logo" style="color:#fff"><span class="logo-mark">✦</span>NOVA<em style="color:#9a8cff">CV</em></a>
+        <p>The Intelligent CV System. Write smarter, design faster, get hired sooner.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="X"></a><a href="#" aria-label="LinkedIn">in</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#templates">CV Templates</a><a href="#editor">Live Editor</a><a href="#features">AI Writer</a><a href="#pricing">Pricing</a><a href="#">Cover Letters</a>
+      </div>
+      <div class="foot-col">
+        <h4>Resources</h4>
+        <a href="#">CV Examples</a><a href="#">Career Blog</a><a href="#">ATS Guide</a><a href="#faq">Help Center</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About NOVA</a><a href="#">Careers</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 NOVA CV — Intelligent CV System. All rights reserved.</span>
+      <span>Made with ✦ for job seekers everywhere</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- header ---------- */
+var siteHeader = document.getElementById('siteHeader');
+window.addEventListener('scroll', function(){
+  siteHeader.classList.toggle('scrolled', window.scrollY > 10);
+});
+
+/* ---------- mobile menu ---------- */
+var burgerBtn = document.getElementById('burger');
+var mobileMenu = document.getElementById('mobileMenu');
+burgerBtn.addEventListener('click', function(){
+  burgerBtn.classList.toggle('active');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(function(link){
+  link.addEventListener('click', function(){
+    burgerBtn.classList.remove('active');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+/* ---------- reveal on scroll ---------- */
+var revealObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){ entry.target.classList.add('in'); revealObserver.unobserve(entry.target); }
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+
+/* ---------- animated counters ---------- */
+function animateCounter(el){
+  var target = parseFloat(el.getAttribute('data-count'));
+  var decimals = parseInt(el.getAttribute('data-decimals')||'0',10);
+  var suffix = el.getAttribute('data-suffix')||'';
+  var start = null, dur = 1600;
+  function tick(ts){
+    if(!start) start = ts;
+    var prog = Math.min((ts-start)/dur,1);
+    var eased = 1-Math.pow(1-prog,3);
+    el.textContent = (target*eased).toFixed(decimals)+suffix;
+    if(prog<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+var counterObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){ animateCounter(entry.target); counterObserver.unobserve(entry.target); }
+  });
+},{threshold:.6});
+document.querySelectorAll('.stat-num').forEach(function(el){ counterObserver.observe(el); });
+
+/* ---------- marquee duplicate ---------- */
+var marqueeTrack = document.getElementById('marqueeTrack');
+marqueeTrack.innerHTML += marqueeTrack.innerHTML;
+
+/* ---------- template filters ---------- */
+var filterButtons = document.querySelectorAll('.filter-btn');
+var tplCards = document.querySelectorAll('.tpl-card');
+filterButtons.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    filterButtons.forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var f = btn.getAttribute('data-filter');
+    tplCards.forEach(function(card){
+      var cats = card.getAttribute('data-cat').split(' ');
+      var show = (f==='all') || cats.indexOf(f)>-1;
+      card.classList.toggle('hidden', !show);
+    });
+  });
+});
+
+/* ---------- pricing toggle ---------- */
+var billToggle = document.getElementById('billToggle');
+var proPrice = document.getElementById('proPrice');
+var proPer = document.getElementById('proPer');
+var proNote = document.getElementById('proNote');
+var lblMonthly = document.getElementById('lblMonthly');
+var lblYearly = document.getElementById('lblYearly');
+var yearly = false;
+billToggle.addEventListener('click', function(){
+  yearly = !yearly;
+  billToggle.classList.toggle('yearly', yearly);
+  billToggle.setAttribute('aria-checked', yearly);
+  lblMonthly.style.color = yearly ? 'var(--mute)' : 'var(--ink)';
+  lblYearly.style.color = yearly ? 'var(--ink)' : 'var(--mute)';
+  if(yearly){
+    proPrice.textContent = '6';
+    proPer.textContent = '/ month';
+    proNote.textContent = 'Billed $72 yearly — save 33%';
+  }else{
+    proPrice.textContent = '9';
+    proPer.textContent = '/ month';
+    proNote.textContent = 'Billed monthly, cancel anytime';
+  }
+});
+
+/* ---------- FAQ accordion ---------- */
+document.querySelectorAll('.faq-item').forEach(function(item){
+  var q = item.querySelector('.faq-q');
+  var a = item.querySelector('.faq-a');
+  q.addEventListener('click', function(){
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(other){
+      other.classList.remove('open');
+      other.querySelector('.faq-a').style.maxHeight = null;
+    });
+    if(!isOpen){
+      item.classList.add('open');
+      a.style.maxHeight = a.scrollHeight + 'px';
+    }
+  });
+});
+
+/* ---------- live editor ---------- */
+var inName = document.getElementById('inName');
+var inTitle = document.getElementById('inTitle');
+var pvName = document.getElementById('pvName');
+var pvTitle = document.getElementById('pvTitle');
+var resumePreview = document.getElementById('resumePreview');
+inName.addEventListener('input', function(){ pvName.textContent = inName.value.trim() || 'Alex Morgan'; });
+inTitle.addEventListener('input', function(){ pvTitle.textContent = inTitle.value.trim() || 'Product Designer'; });
+
+document.getElementById('swatches').addEventListener('click', function(e){
+  var sw = e.target.closest('.swatch');
+  if(!sw) return;
+  document.querySelectorAll('.swatch').forEach(function(s){ s.classList.remove('active'); });
+  sw.classList.add('active');
+  resumePreview.style.setProperty('--pv', sw.getAttribute('data-c'));
+  resumePreview.style.setProperty('--pv-soft', sw.getAttribute('data-soft'));
+});
+
+var aiWriteBtn = document.getElementById('aiWriteBtn');
+var pvSummary = document.getElementById('pvSummary');
+var typingTimer = null;
+var aiSamples = [
+  "Product designer with 6+ years crafting data-informed digital experiences. Known for pairing rapid prototyping with rigorous usability testing, shipping work that lifted activation 31% and cut support tickets by a quarter.",
+  "Results-driven professional who turns ambiguous problems into shipped, measurable wins. Blends analytical depth with a sharp eye for detail, and thrives where design, data and business goals intersect.",
+  "Collaborative builder of design systems and high-trust teams. Delivered a 200-component library adopted across four squads, accelerating release cycles by 40% without sacrificing craft."
+];
+var aiIndex = 0;
+aiWriteBtn.addEventListener('click', function(){
+  if(typingTimer) clearInterval(typingTimer);
+  var text = aiSamples[aiIndex % aiSamples.length];
+  aiIndex++;
+  pvSummary.textContent = '';
+  pvSummary.classList.add('typing');
+  var pos = 0;
+  typingTimer = setInterval(function(){
+    pos += 2;
+    pvSummary.textContent = text.slice(0, pos);
+    if(pos >= text.length){
+      clearInterval(typingTimer);
+      typingTimer = null;
+      pvSummary.classList.remove('typing');
+    }
+  }, 14);
+});
+</script>
+</body>
+</html>
