@@ -1,1418 +1,870 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catalyst CV — Build CVs That Get Interviews</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/400.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/600.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/700.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/sora@5/800.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/400.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/500.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/600.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<style>
-:root {
-  --violet: #5A48F5;
-  --violet-d: #4434d6;
-  --violet-l: #eceaff;
-  --ink: #0e1030;
-  --ink-2: #3c4060;
-  --mute: #6b7089;
-  --bg: #fbfbfe;
-  --card: #ffffff;
-  --line: #e7e7f2;
-  --amber: #ffb020;
-  --teal: #0fb5a3;
-  --coral: #ff6b5e;
-  --mpesa: #43b02a;
-  --r-lg: 22px;
-  --r-md: 14px;
-  --shadow-lg: 0 24px 60px -18px rgba(14,16,48,.18);
-  --shadow-md: 0 10px 30px -10px rgba(14,16,48,.14);
-  --shadow-sm: 0 4px 12px -4px rgba(14,16,48,.08);
-  --font-head: 'Sora', sans-serif;
-  --font-body: 'Inter', sans-serif;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--ink);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-head);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-img { max-width: 100%; display: block; }
-a { text-decoration: none; color: inherit; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; }
-
-.container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-section { padding: 96px 0; }
-
-/* HEADER */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  height: 76px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: transparent;
-}
-
-header.scrolled {
-  background: rgba(251, 251, 254, 0.95);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 1px 0 var(--line), 0 8px 24px -16px rgba(14, 16, 48, 0.12);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.02em;
-  transition: transform 0.2s;
-}
-
-.logo:hover { transform: scale(1.02); }
-
-.logo-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: linear-gradient(135deg, var(--violet), #8a5cff);
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 16px;
-  box-shadow: 0 6px 16px -6px rgba(90, 72, 245, 0.6);
-}
-
-.logo em { font-style: normal; color: var(--violet); }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink-2);
-  position: relative;
-  transition: color 0.2s;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--violet);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-links a:hover::after { width: 100%; }
-
-.nav-cta {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-weight: 600;
-  font-size: 15px;
-  border-radius: 12px;
-  padding: 14px 26px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--x, 0) var(--y, 0), rgba(255,255,255,0.3), transparent 50%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.btn:active::before {
-  animation: ripple 0.6s ease-out;
-}
-
-@keyframes ripple {
-  from { opacity: 1; transform: scale(0); }
-  to { opacity: 0; transform: scale(4); }
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--violet), #8a5cff);
-  color: #fff;
-  box-shadow: 0 10px 24px -8px rgba(90, 72, 245, 0.5);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px -8px rgba(90, 72, 245, 0.6);
-}
-
-.btn-ghost {
-  background: #fff;
-  color: var(--ink);
-  border: 1.5px solid var(--line);
-}
-
-.btn-ghost:hover {
-  border-color: var(--violet);
-  color: var(--violet);
-  transform: translateY(-2px);
-  background: var(--violet-l);
-}
-
-.btn-mpesa {
-  background: var(--mpesa);
-  color: #fff;
-  box-shadow: 0 10px 24px -8px rgba(67, 176, 42, 0.5);
-}
-
-.btn-mpesa:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px -8px rgba(67, 176, 42, 0.6);
-}
-
-.btn-sm { padding: 10px 18px; font-size: 14px; }
-.btn[disabled] { opacity: 0.6; pointer-events: none; }
-
-/* HERO */
-.hero {
-  padding: 160px 0 80px;
-  position: relative;
-  overflow: hidden;
-  margin-top: 76px;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -260px;
-  right: -220px;
-  width: 640px;
-  height: 640px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(90, 72, 245, 0.14), transparent 65%);
-  animation: float 6s ease-in-out infinite;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -300px;
-  left: -260px;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 176, 32, 0.12), transparent 65%);
-  animation: float 8s ease-in-out infinite 1s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-30px) scale(1.05); }
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 56px;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-}
-
-.hero h1 {
-  font-size: clamp(36px, 5vw, 58px);
-  font-weight: 800;
-  margin-bottom: 20px;
-  line-height: 1.1;
-}
-
-.hero h1 .grad {
-  background: linear-gradient(90deg, var(--violet), #9a5cff 60%, var(--coral));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.1); }
-}
-
-.hero p.lead {
-  font-size: 18px;
-  color: var(--mute);
-  max-width: 520px;
-  margin-bottom: 30px;
-  line-height: 1.7;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 26px;
-}
-
-.hero-visual {
-  position: relative;
-  animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.hero-visual img {
-  border-radius: 24px;
-  box-shadow: var(--shadow-lg);
-  width: 100%;
-  max-height: 600px;
-  object-fit: cover;
-  animation: float 7s ease-in-out infinite;
-}
-
-/* MARQUEE */
-.marquee-wrap {
-  padding: 26px 0 40px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: #fff;
-}
-
-.marquee-label {
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--mute);
-  margin-bottom: 22px;
-}
-
-.marquee {
-  overflow: hidden;
-  position: relative;
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-
-.marquee-track {
-  display: flex;
-  gap: 70px;
-  width: max-content;
-  animation: scroll 40s linear infinite;
-}
-
-@keyframes scroll {
-  to { transform: translateX(-50%); }
-}
-
-.marquee:hover .marquee-track { animation-play-state: paused; }
-
-.m-logo {
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 19px;
-  color: #a2a6bf;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  white-space: nowrap;
-  transition: transform 0.3s, color 0.3s;
-}
-
-.m-logo:hover { transform: scale(1.08); color: var(--violet); }
-
-/* TEMPLATE CAROUSEL */
-.tpl-sec { background: #fff; }
-
-.car-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 20px;
-  margin-bottom: 34px;
-  flex-wrap: wrap;
-}
-
-.car-head h2 {
-  font-size: clamp(26px, 3.4vw, 38px);
-  font-weight: 700;
-}
-
-.car-nav {
-  display: flex;
-  gap: 10px;
-}
-
-.car-nav button {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid var(--line);
-  font-size: 17px;
-  color: var(--ink-2);
-  transition: all 0.2s;
-}
-
-.car-nav button:hover {
-  border-color: var(--violet);
-  color: var(--violet);
-  transform: translateY(-2px);
-}
-
-.car-track {
-  display: flex;
-  gap: 22px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  cursor: grab;
-  padding: 6px 4px 26px;
-}
-
-.car-track::-webkit-scrollbar { display: none; }
-
-.car-track.grabbing { cursor: grabbing; }
-
-.car-card {
-  flex: 0 0 292px;
-  scroll-snap-align: start;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-}
-
-.car-card:hover {
-  transform: translateY(-12px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--violet);
-}
-
-.car-img {
-  overflow: hidden;
-  aspect-ratio: 4 / 4.2;
-  background: linear-gradient(135deg, #f5f3ff, #fff0f5);
-  position: relative;
-}
-
-.car-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.car-card.active .car-img::after {
-  content: '✦ Active';
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: var(--violet);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 99px;
-  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.car-body {
-  padding: 16px 18px 18px;
-}
-
-.car-body h3 {
-  font-size: 16.5px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.tpl-tag {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--violet);
-  background: var(--violet-l);
-  padding: 4px 12px;
-  border-radius: 99px;
-  display: inline-block;
-}
-
-.car-body .btn { width: 100%; }
-
-/* STATS SECTION */
-.stats-wrap {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 24px;
-  margin-top: 48px;
-}
-
-.stat-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 24px;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--violet);
-  box-shadow: var(--shadow-md);
-}
-
-.stat-num {
-  font-family: var(--font-head);
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--violet);
-  margin-bottom: 6px;
-}
-
-.stat-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--mute);
-  letter-spacing: 0.05em;
-}
-
-/* FEATURES */
-.feat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.feat-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 32px 28px;
-  transition: all 0.25s;
-  position: relative;
-}
-
-.feat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--r-lg);
-  background: linear-gradient(135deg, rgba(90, 72, 245, 0.05), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.feat-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
-  border-color: transparent;
-}
-
-.feat-card:hover::before { opacity: 1; }
-
-.feat-ic {
-  width: 52px;
-  height: 52px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  transition: transform 0.3s;
-}
-
-.feat-card:hover .feat-ic { transform: scale(1.1) rotate(5deg); }
-
-.feat-card h3 {
-  font-size: 19px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.feat-card p {
-  color: var(--mute);
-  font-size: 15px;
-}
-
-/* PRICING */
-.pricing { background: #fff; }
-
-.price-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
-  max-width: 860px;
-  margin: 0 auto;
-}
-
-.price-card {
-  border: 1.5px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 38px 34px;
-  position: relative;
-  background: var(--bg);
-  transition: all 0.3s;
-}
-
-.price-card.popular {
-  border-color: var(--violet);
-  background: #fff;
-  box-shadow: 0 24px 60px -20px rgba(90, 72, 245, 0.3);
-  transform: scale(1.02);
-}
-
-.pop-chip {
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, var(--violet), #8a5cff);
-  color: #fff;
-  font-size: 12.5px;
-  font-weight: 700;
-  padding: 6px 18px;
-  border-radius: 99px;
-}
-
-.price-card h3 {
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
-.price-amt {
-  font-family: var(--font-head);
-  font-size: 46px;
-  font-weight: 800;
-  margin: 18px 0;
-}
-
-.p-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.p-list li {
-  display: flex;
-  gap: 11px;
-  font-size: 14.5px;
-  color: var(--ink-2);
-}
-
-.p-list li::before {
-  content: '✓';
-  color: var(--teal);
-  font-weight: 800;
-  flex-shrink: 0;
-}
-
-.p-list li.no {
-  opacity: 0.45;
-}
-
-.p-list li.no::before {
-  content: '−';
-  color: var(--mute);
-}
-
-.price-card .btn { width: 100%; }
-
-/* EDITOR PANEL */
-.editor-sec {
-  background: linear-gradient(180deg, #fff, #f4f3ff);
-}
-
-.editor-grid {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-.editor-panel {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 32px;
-  box-shadow: var(--shadow-md);
-  position: sticky;
-  top: 100px;
-}
-
-.editor-panel h3 {
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
-.field {
-  margin-bottom: 20px;
-}
-
-.field label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  margin-bottom: 8px;
-}
-
-.field input,
-.field textarea {
-  width: 100%;
-  border: 1.5px solid var(--line);
-  border-radius: 11px;
-  padding: 13px 15px;
-  font-size: 15px;
-  font-family: inherit;
-  transition: all 0.2s;
-  background: var(--bg);
-}
-
-.field input:focus,
-.field textarea:focus {
-  outline: none;
-  border-color: var(--violet);
-  box-shadow: 0 0 0 4px rgba(90, 72, 245, 0.12);
-  background: #fff;
-}
-
-.field textarea {
-  resize: vertical;
-  min-height: 96px;
-}
-
-.resume-preview {
-  background: #fff;
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  --pv: #5A48F5;
-  --pv-soft: #eceaff;
-  font-family: var(--font-body);
-  animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.pv-top {
-  height: 10px;
-  background: var(--pv);
-}
-
-.pv-inner {
-  padding: 34px 38px;
-}
-
-.pv-name {
-  font-family: var(--font-head);
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--pv);
-}
-
-.pv-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink-2);
-  margin-top: 3px;
-}
-
-/* MODALS */
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  backdrop-filter: blur(4px);
-}
-
-.modal.open {
-  display: flex;
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-back {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 12, 35, 0.55);
-  z-index: -1;
-}
-
-.modal-card {
-  position: relative;
-  background: #fff;
-  border-radius: 22px;
-  box-shadow: var(--shadow-lg);
-  width: 100%;
-  max-width: 440px;
-  max-height: 92vh;
-  overflow: auto;
-  padding: 34px;
-  animation: popIn 0.3s cubic-bezier(0.2, 1.2, 0.4, 1);
-}
-
-@keyframes popIn {
-  from {
-    transform: translateY(22px) scale(0.96);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
-}
-
-.modal-x {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--bg);
-  color: var(--mute);
-  font-size: 15px;
-  display: grid;
-  place-items: center;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.modal-x:hover {
-  background: var(--violet-l);
-  color: var(--violet);
-  transform: rotate(90deg);
-}
-
-/* TOASTS */
-#toasts {
-  position: fixed;
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  pointer-events: none;
-}
-
-.toast {
-  background: var(--ink);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 13px 22px;
-  border-radius: 99px;
-  box-shadow: var(--shadow-lg);
-  animation: slideUp 0.4s cubic-bezier(0.2, 1.2, 0.4, 1);
-  max-width: 92vw;
-  text-align: center;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
-}
-
-/* RESPONSIVE */
-@media (max-width: 1020px) {
-  .hero-grid, .editor-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .editor-panel {
-    position: static;
-  }
-  
-  .feat-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .price-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .price-card.popular {
-    transform: scale(1);
-  }
-}
-
-@media (max-width: 720px) {
-  .nav-links { display: none; }
-  
-  section { padding: 70px 0; }
-  
-  .hero {
-    padding: 120px 0 60px;
-  }
-  
-  .feat-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .car-card {
-    flex: 0 0 260px;
-  }
-  
-  .hero-grid, .editor-grid {
-    gap: 32px;
-  }
-}
-
-[hidden] { display: none !important; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVENT COMMANDER — Command the Event. Connect the People. Measure the Impact.</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ink: {
+                            950: '#050505',
+                            900: '#0a0a0a',
+                            850: '#0f0f10',
+                            800: '#141416',
+                            700: '#1c1c1f',
+                            600: '#26262a',
+                            500: '#3a3a40',
+                        },
+                        champagne: {
+                            50:  '#fbf6e7',
+                            100: '#f5e9c2',
+                            200: '#ebd78f',
+                            300: '#dfc064',
+                            400: '#d4af37',
+                            500: '#c9a961',
+                            600: '#a8873a',
+                            700: '#7d6528',
+                        },
+                        pearl: '#f5f5f0',
+                        ember: {
+                            400: '#ea580c',
+                            500: '#c2410c',
+                            600: '#9a3412',
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #f5f5f0;
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(20,20,22,0.55);
+            backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #f5e9c2 0%, #d4af37 40%, #c9a961 70%, #a8873a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(201,169,97,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,169,97,0.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .bg-radial-gold {
+            background: radial-gradient(circle at 50% 0%, rgba(201,169,97,0.15), transparent 60%);
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
+            animation: livePulse 1.8s ease-out infinite;
+        }
+        
+        @keyframes livePulse {
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+            70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+        }
+        
+        .shadow-glow {
+            box-shadow: 0 0 40px -10px rgba(201, 169, 97, 0.35);
+        }
+        
+        .card-lift {
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+        }
+        
+        .card-lift:hover {
+            transform: translateY(-2px);
+            border-color: rgba(201,169,97,0.3);
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,169,97,0.15);
+        }
+        
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(201,169,97,0.18);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(201,169,97,0.35);
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+    </style>
 </head>
 <body>
-
-<!-- HEADER -->
-<header id="siteHeader">
-  <div class="container nav">
-    <a href="#" class="logo"><span class="logo-mark">✦</span>Catalyst&nbsp;<em>CV</em></a>
-    <ul class="nav-links">
-      <li><a href="#templates">Templates</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#demo">Live Demo</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-    </ul>
-    <div class="nav-cta">
-      <button class="btn btn-primary btn-sm" id="heroBtn">Get started</button>
-    </div>
-  </div>
-</header>
-
-<!-- MAIN -->
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container hero-grid">
-      <div>
-        <h1>Your CV deserves to be <span class="grad">brilliant.</span></h1>
-        <p class="lead">Build ATS-optimized CVs in minutes with AI-powered writing. Choose from 6 beautifully designed templates. Pay KES 150 via M-Pesa only when you download.</p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" id="heroCtaBtn">Start building free</button>
-          <a href="#templates" class="btn btn-ghost">Browse templates</a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <svg viewBox="0 0 400 500" style="width:100%;max-width:500px">
-          <defs>
-            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#5A48F5;stop-opacity:0.1" />
-              <stop offset="100%" style="stop-color:#8a5cff;stop-opacity:0.05" />
-            </linearGradient>
-          </defs>
-          
-          <!-- CV Card -->
-          <rect x="30" y="40" width="340" height="420" rx="16" fill="#fff" stroke="#e7e7f2" stroke-width="1"/>
-          <rect x="30" y="40" width="340" height="16" rx="16" fill="#5A48F5"/>
-          
-          <!-- Header -->
-          <text x="50" y="100" font-family="Sora, sans-serif" font-size="24" font-weight="800" fill="#5A48F5">Alex Morgan</text>
-          <text x="50" y="130" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#3c4060">Product Designer</text>
-          
-          <!-- Content -->
-          <text x="50" y="170" font-family="Sora, sans-serif" font-size="11" font-weight="700" fill="#5A48F5" letter-spacing="1">SUMMARY</text>
-          <text x="50" y="190" font-family="Inter, sans-serif" font-size="12" fill="#0e1030" xml:space="preserve">Product designer with 6+ years of <tspan x="50" dy="15">experience. Led redesigns lifting</tspan><tspan x="50" dy="15">adoption by 31% and shipping fast.</tspan></text>
-          
-          <!-- Experience -->
-          <text x="50" y="250" font-family="Sora, sans-serif" font-size="11" font-weight="700" fill="#5A48F5" letter-spacing="1">EXPERIENCE</text>
-          <text x="50" y="270" font-family="Sora, sans-serif" font-size="13" font-weight="700" fill="#0e1030">Senior Designer</text>
-          <text x="50" y="285" font-family="Inter, sans-serif" font-size="11" fill="#6b7089">Lumina Labs · 2022 – Present</text>
-          <text x="50" y="305" font-family="Inter, sans-serif" font-size="12" fill="#3c4060" xml:space="preserve">Led dashboard redesign; +31% activation</text>
-          
-          <!-- Skills -->
-          <text x="50" y="340" font-family="Sora, sans-serif" font-size="11" font-weight="700" fill="#5A48F5" letter-spacing="1">SKILLS</text>
-          <circle cx="70" cy="360" r="3" fill="#0fb5a3"/>
-          <text x="80" y="363" font-family="Inter, sans-serif" font-size="11" fill="#3c4060">Figma</text>
-          <circle cx="70" cy="380" r="3" fill="#0fb5a3"/>
-          <text x="80" y="383" font-family="Inter, sans-serif" font-size="11" fill="#3c4060">Design Systems</text>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <p class="marquee-label">Trusted by professionals at</p>
-    <div class="marquee">
-      <div class="marquee-track" id="marqueeTrack">
-        <span class="m-logo">◆ Lumina Labs</span>
-        <span class="m-logo">● Brightpath</span>
-        <span class="m-logo">▲ Vertex.io</span>
-        <span class="m-logo">✦ Northwind</span>
-        <span class="m-logo">■ Orbital</span>
-        <span class="m-logo">◗ Kite &amp; Co</span>
-        <span class="m-logo">◇ Halcyon</span>
-        <span class="m-logo">✚ Fernworks</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TEMPLATES -->
-  <section class="tpl-sec" id="templates">
-    <div class="container">
-      <div class="car-head">
-        <div>
-          <h2>Six premium templates</h2>
-          <p style="color: var(--mute); font-size: 14px; margin-top: 8px;">Each designed for modern hiring</p>
-        </div>
-        <div class="car-nav">
-          <button id="carPrev" aria-label="Previous">←</button>
-          <button id="carNext" aria-label="Next">→</button>
-        </div>
-      </div>
-      <div class="car-track" id="carTrack">
-        <div class="car-card" data-template="aurora">
-          <div class="car-img" style="background: linear-gradient(135deg, #eceaff, #f8f6ff);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="20" rx="4" fill="#5A48F5" opacity="0.8"/>
-              <text x="30" y="50" font-size="16" font-weight="700" fill="#5A48F5">Aurora CV</text>
-              <text x="30" y="70" font-size="11" fill="#6b7089">Professional & Modern</text>
-              <rect x="30" y="90" width="220" height="3" rx="1.5" fill="#5A48F5" opacity="0.3"/>
-              <text x="30" y="115" font-size="12" font-weight="600" fill="#3c4060">Summary</text>
-              <line x1="30" y1="122" x2="250" y2="122" stroke="#5A48F5" stroke-width="2" opacity="0.4"/>
-              <text x="30" y="145" font-size="11" fill="#6b7089">Experienced designer with...</text>
-              <text x="30" y="160" font-size="11" fill="#6b7089">passion for solving problems.</text>
-              <text x="30" y="185" font-size="12" font-weight="600" fill="#3c4060">Experience</text>
-              <circle cx="30" cy="205" r="2" fill="#5A48F5"/>
-              <text x="40" y="208" font-size="11" font-weight="600" fill="#3c4060">Senior Role · 2022</text>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Aurora</h3>
-            <span class="tpl-tag">Professional</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-
-        <div class="car-card" data-template="slate">
-          <div class="car-img" style="background: linear-gradient(135deg, #e9eaf0, #f3f4f9);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="270" rx="4" fill="none" stroke="#3c4060" stroke-width="2" opacity="0.15"/>
-              <text x="30" y="55" font-size="18" font-weight="800" fill="#3c4060">Alex Morgan</text>
-              <text x="30" y="75" font-size="13" fill="#6b7089">Product Designer</text>
-              <line x1="30" y1="85" x2="250" y2="85" stroke="#3c4060" stroke-width="1" opacity="0.2"/>
-              <text x="30" y="115" font-size="11" font-weight="700" fill="#3c4060">EXPERIENCE</text>
-              <text x="30" y="135" font-size="12" font-weight="600" fill="#3c4060">Senior Designer</text>
-              <text x="30" y="150" font-size="11" fill="#6b7089">Lumina Labs · 2022–Present</text>
-              <circle cx="30" cy="165" r="2.5" fill="#3c4060"/>
-              <text x="40" y="168" font-size="10" fill="#6b7089">Led dashboard redesign</text>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Slate</h3>
-            <span class="tpl-tag">Minimal</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-
-        <div class="car-card" data-template="prism">
-          <div class="car-img" style="background: linear-gradient(135deg, #fde8ea, #fff5f6);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="20" rx="4" fill="#e0475b"/>
-              <circle cx="35" cy="90" r="18" fill="#e0475b" opacity="0.2"/>
-              <text x="30" y="130" font-size="18" font-weight="800" fill="#e0475b">Alex Morgan</text>
-              <text x="30" y="150" font-size="12" fill="#6b7089">Product Designer • Nairobi</text>
-              <rect x="30" y="165" width="60" height="4" rx="2" fill="#e0475b" opacity="0.5"/>
-              <text x="30" y="190" font-size="11" font-weight="700" fill="#e0475b">RECENT</text>
-              <text x="30" y="210" font-size="12" font-weight="600" fill="#3c4060">Senior Designer</text>
-              <text x="30" y="227" font-size="11" fill="#6b7089">Lumina Labs, 6 years</text>
-              <text x="160" y="190" font-size="11" font-weight="700" fill="#e0475b">SKILLS</text>
-              <circle cx="160" cy="210" r="2.5" fill="#e0475b"/>
-              <text x="170" y="213" font-size="10" fill="#3c4060">Figma</text>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Prism</h3>
-            <span class="tpl-tag">Creative</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-
-        <div class="car-card" data-template="beacon">
-          <div class="car-img" style="background: linear-gradient(135deg, #e0f6f2, #f5fffe);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="20" rx="10" fill="#0fb5a3"/>
-              <text x="30" y="65" font-size="17" font-weight="800" fill="#0fb5a3">Alex Morgan</text>
-              <text x="30" y="85" font-size="12" fill="#6b7089">Product Designer</text>
-              <text x="30" y="115" font-size="11" font-weight="600" fill="#0fb5a3">→ Summary</text>
-              <line x1="30" y1="122" x2="250" y2="122" stroke="#0fb5a3" stroke-width="1.5"/>
-              <text x="30" y="145" font-size="11" fill="#3c4060">Experienced designer with <tspan x="30" dy="12">passion for great UX</tspan></text>
-              <text x="30" y="180" font-size="11" font-weight="600" fill="#0fb5a3">→ Work</text>
-              <line x1="30" y1="187" x2="250" y2="187" stroke="#0fb5a3" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Beacon</h3>
-            <span class="tpl-tag">ATS-Friendly</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-
-        <div class="car-card" data-template="heritage">
-          <div class="car-img" style="background: linear-gradient(135deg, #e8edf5, #f0f4fb);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="270" rx="6" fill="none" stroke="#1f3a5f" stroke-width="2" opacity="0.2"/>
-              <text x="30" y="55" font-size="19" font-weight="800" fill="#1f3a5f">ALEX MORGAN</text>
-              <text x="30" y="75" font-size="12" letter-spacing="0.5" fill="#6b7089">PRODUCT DESIGNER</text>
-              <line x1="30" y1="85" x2="250" y2="85" stroke="#1f3a5f" stroke-width="2"/>
-              <text x="30" y="115" font-size="10" font-weight="700" letter-spacing="1" fill="#1f3a5f">PROFESSIONAL</text>
-              <text x="30" y="135" font-size="12" font-weight="600" fill="#1f3a5f">Senior Designer</text>
-              <text x="30" y="152" font-size="11" fill="#6b7089">Lumina Labs | 2022 – Present</text>
-              <text x="30" y="170" font-size="11" fill="#3c4060">Led dashboard redesign, +31%</text>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Heritage</h3>
-            <span class="tpl-tag">Executive</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-
-        <div class="car-card" data-template="onyx">
-          <div class="car-img" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
-            <svg viewBox="0 0 280 300" style="width:100%;height:100%">
-              <rect x="15" y="15" width="250" height="20" rx="4" fill="#7a4dfc"/>
-              <text x="30" y="65" font-size="18" font-weight="800" fill="#fff">Alex Morgan</text>
-              <text x="30" y="85" font-size="12" fill="#b0a8d4">Product Designer</text>
-              <line x1="30" y1="100" x2="250" y2="100" stroke="#7a4dfc" stroke-width="2" opacity="0.6"/>
-              <text x="30" y="130" font-size="11" font-weight="700" fill="#7a4dfc" letter-spacing="1">SUMMARY</text>
-              <text x="30" y="150" font-size="11" fill="#d4d0e6">Experienced designer crafting <tspan x="30" dy="12">intuitive user experiences</tspan></text>
-              <text x="30" y="185" font-size="11" font-weight="700" fill="#7a4dfc" letter-spacing="1">EXPERIENCE</text>
-              <text x="30" y="205" font-size="12" font-weight="600" fill="#fff">Senior Designer</text>
-            </svg>
-          </div>
-          <div class="car-body">
-            <h3>Onyx</h3>
-            <span class="tpl-tag">Dark Mode</span>
-            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:12px;">Use template</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section id="features">
-    <div class="container">
-      <h2 style="font-size:38px;margin-bottom:12px;text-align:center">Built for the real world</h2>
-      <p style="text-align:center;color:var(--mute);max-width:600px;margin:0 auto 56px;font-size:16px">Every template passes ATS screening. AI writes your summary. Instant PDF downloads. No subscriptions ever.</p>
-      
-      <div class="feat-grid">
-        <div class="feat-card">
-          <div class="feat-ic" style="background:var(--violet-l)">⚡</div>
-          <h3>Built in minutes</h3>
-          <p>Six guided steps. Live preview. No design skills needed — if you can fill a form, you can ship a CV.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-ic" style="background:#e8f9f5">🤖</div>
-          <h3>AI writing assistant</h3>
-          <p>Describe yourself in rough sentences. The AI rewrites into a polished, achievement-focused summary.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-ic" style="background:#eaf7e6">✓</div>
-          <h3>ATS optimized</h3>
-          <p>Every template uses parse-safe structure. Live score tells you exactly where you stand before applying.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-ic" style="background:#ffe9e7">🔒</div>
-          <h3>Your data, always</h3>
-          <p>Encrypted, never sold, never used to train AI. Export or delete everything anytime.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-ic" style="background:#fff3dd">📲</div>
-          <h3>M-Pesa simple</h3>
-          <p>KES 150 once via M-Pesa. No subscription, no renewals, no surprises. Transparent forever.</p>
-        </div>
-        <div class="feat-card">
-          <div class="feat-ic" style="background:var(--violet-l)">📊</div>
-          <h3>Real-time feedback</h3>
-          <p>See your ATS score, keyword match, and improvement tips as you type. No guessing.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="pricing" id="pricing">
-    <div class="container">
-      <h2 style="font-size:38px;margin-bottom:12px;text-align:center">Simple pricing</h2>
-      <p style="text-align:center;color:var(--mute);max-width:600px;margin:0 auto 56px;font-size:16px">Start free. Unlock everything for one honest payment.</p>
-      
-      <div class="price-grid">
-        <div class="price-card">
-          <h3>Starter</h3>
-          <p style="color:var(--mute);font-size:14px;margin:8px 0 18px">Build and preview your CV free.</p>
-          <div class="price-amt">KES 0</div>
-          <p style="font-size:13px;color:var(--mute);margin:0 0 26px">Forever free</p>
-          <ul class="p-list">
-            <li>1 CV &amp; 3 core templates</li>
-            <li>3 AI summaries monthly</li>
-            <li>Live preview</li>
-            <li class="no">PDF download</li>
-            <li class="no">All 6 templates</li>
-            <li class="no">Unlimited AI</li>
-          </ul>
-          <button class="btn btn-ghost" style="width:100%">Start free</button>
-        </div>
-        <div class="price-card popular">
-          <span class="pop-chip">BEST VALUE</span>
-          <h3>Premium</h3>
-          <p style="color:var(--mute);font-size:14px;margin:8px 0 18px">The full system. One payment.</p>
-          <div class="price-amt">KES 150</div>
-          <p style="font-size:13px;color:var(--mute);margin:0 0 26px">Pay once · Yours forever</p>
-          <ul class="p-list">
-            <li>Unlimited CVs &amp; all 6 templates</li>
-            <li>Unlimited AI writing &amp; rewrites</li>
-            <li>Real-time ATS scoring</li>
-            <li>Instant PDF downloads</li>
-            <li>Job tailoring in one click</li>
-            <li>Priority support</li>
-          </ul>
-          <button class="btn btn-mpesa" style="width:100%;margin-bottom:12px">📲 Pay KES 150</button>
-          <p style="font-size:12px;color:var(--mute);text-align:center">Via M-Pesa · Settles instantly</p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- FOOTER -->
-<footer style="background:var(--ink);color:#a9adcc;padding:70px 0 34px">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;margin-bottom:54px">
-      <div>
-        <a href="#" class="logo" style="color:#fff;margin-bottom:16px"><span class="logo-mark">✦</span>Catalyst&nbsp;<em style="color:#9a8cff">CV</em></a>
-        <p style="font-size:14.5px;color:#a9adcc;max-width:280px">Build brilliant CVs. Land brilliant interviews. That's it.</p>
-      </div>
-      <div>
-        <h4 style="color:#fff;font-size:15px;margin-bottom:18px">Product</h4>
-        <a href="#templates" style="display:block;font-size:14.5px;margin-bottom:12px;color:#a9adcc;transition:color 0.2s">Templates</a>
-        <a href="#features" style="display:block;font-size:14.5px;margin-bottom:12px;color:#a9adcc;transition:color 0.2s">Features</a>
-        <a href="#pricing" style="display:block;font-size:14.5px;color:#a9adcc;transition:color 0.2s">Pricing</a>
-      </div>
-      <div>
-        <h4 style="color:#fff;font-size:15px;margin-bottom:18px">Company</h4>
-        <a href="#" style="display:block;font-size:14.5px;margin-bottom:12px;color:#a9adcc;transition:color 0.2s">About</a>
-        <a href="#" style="display:block;font-size:14.5px;margin-bottom:12px;color:#a9adcc;transition:color 0.2s">Privacy</a>
-        <a href="#" style="display:block;font-size:14.5px;color:#a9adcc;transition:color 0.2s">Terms</a>
-      </div>
-    </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:13.5px">
-      <span>© 2026 Catalyst CV. Made with ✦ for ambitious job seekers.</span>
-      <span>M-PESA payments settle instantly · 0741272294</span>
-    </div>
-  </div>
-</footer>
-
-<!-- TOASTS -->
-<div id="toasts"></div>
-
-<script>
-// Utilities
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => Array.from(document.querySelectorAll(s));
-const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({
-  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-})[c]);
-
-// Toast notifications
-function toast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  $('#toasts').appendChild(t);
-  setTimeout(() => t.remove(), 3800);
-}
-
-// Header scroll effect
-const header = $('#siteHeader');
-window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 10);
-});
-
-// Navigation
-$$('.nav-links a, a[href^="#"]').forEach(a => {
-  a.addEventListener('click', (e) => {
-    const href = a.getAttribute('href');
-    if (!href.startsWith('#')) return;
-    const id = href.slice(1);
-    const el = document.getElementById(id);
-    if (el) {
-      e.preventDefault();
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
-
-// Hero buttons
-$$('#heroBtn, #heroCtaBtn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    toast('🚀 Redirecting to dashboard... (In a real app, this would open the editor)');
-  });
-});
-
-// Marquee duplication
-const marqueeTrack = $('#marqueeTrack');
-marqueeTrack.innerHTML += marqueeTrack.innerHTML;
-
-// Carousel
-const carTrack = $('#carTrack');
-const carPrev = $('#carPrev');
-const carNext = $('#carNext');
-
-function carStep() {
-  const card = carTrack.querySelector('.car-card');
-  return card ? card.getBoundingClientRect().width + 22 : 320;
-}
-
-carPrev.addEventListener('click', () => {
-  carTrack.scrollBy({ left: -carStep(), behavior: 'smooth' });
-});
-
-carNext.addEventListener('click', () => {
-  carTrack.scrollBy({ left: carStep(), behavior: 'smooth' });
-});
-
-// Carousel template selection
-$$('.car-card .btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const template = btn.closest('.car-card').getAttribute('data-template');
-    $$('.car-card').forEach(c => c.classList.remove('active'));
-    btn.closest('.car-card').classList.add('active');
-    btn.textContent = '✓ Selected';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = 'Use template';
-      btn.disabled = false;
-      $$('.car-card').forEach(c => c.classList.remove('active'));
-      toast(`✦ ${template.charAt(0).toUpperCase() + template.slice(1)} template selected!`);
-    }, 2000);
-  });
-});
-
-// Ripple effect on buttons
-document.addEventListener('pointerdown', (e) => {
-  if (!e.target.closest('.btn')) return;
-  const btn = e.target.closest('.btn');
-  const rect = btn.getBoundingClientRect();
-  btn.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-  btn.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-});
-
-// Pricing button
-$$('.price-card .btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.textContent.includes('KES 150')) {
-      toast('💳 M-Pesa payment flow would open here...');
-    } else {
-      toast('🎉 Taking you to the CV builder...');
-    }
-  });
-});
-
-// Initialize
-toast('👋 Welcome to Catalyst CV');
-</script>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+        const { motion, AnimatePresence } = window.Motion || window.FramerMotion || {};
+        
+        // ============ DATA ============
+        const EVENT = {
+            name: 'AFRICA BUSINESS SUMMIT 2026',
+            tagline: "Where Africa's Business Leaders Meet the Future.",
+            city: 'Nairobi',
+            country: 'Kenya',
+            venue: 'Kenyatta International Convention Centre (KICC)',
+            dates: 'October 14–16, 2026',
+            startDate: new Date('2026-10-14T09:00:00+03:00'),
+            attendees: 2847,
+            speakers: 86,
+            sponsors: 42,
+            sessions: 18,
+            engagement: 94,
+        };
+        
+        const CURRENT_USER = {
+            id: 'ABS26-004821',
+            name: 'Graham Esonga',
+            firstName: 'Graham',
+            title: 'Chief Strategy Officer',
+            company: 'African Growth Partners',
+            country: 'Kenya',
+            industry: 'Investment',
+            pass: 'EXECUTIVE',
+            interests: ['AI','Investment','Sustainability'],
+            points: 1020,
+            connections: 5,
+            sessionsSaved: 5,
+            checkedIn: true,
+        };
+        
+        const SPEAKERS = [
+            { id:'sp1', name:'Dr. Amara Okafor', title:'AI Research Lead', org:'Savannah AI Labs', country:'Nigeria', bio:'Pioneer in applied AI for African markets.', sessions:['s3','s7'], status:'CONFIRMED' },
+            { id:'sp2', name:'Prof. Kwame Asante', title:'Dean, Business School', org:'University of Ghana', country:'Ghana', bio:'Economist focused on continental trade integration.', sessions:['s2','s11'], status:'CONFIRMED' },
+            { id:'sp3', name:'Nadia El-Sayed', title:'Managing Partner', org:'Cairo Capital', country:'Egypt', bio:'Leads a $1.2B fund investing in pan-African technology.', sessions:['s5','s10'], status:'CONFIRMED' },
+            { id:'sp4', name:'Jabari Muthoni', title:'CEO', org:'Nairobi FinTech Labs', country:'Kenya', bio:'Built three unicorn fintechs across East Africa.', sessions:['s4','s12'], status:'CHECKED IN' },
+        ];
+        
+        const ROOMS = [
+            { id:'r1', name:'Main Stage', capacity: 1200, icon:'🎤' },
+            { id:'r2', name:'Room A — Savannah', capacity: 300, icon:'🏜️' },
+            { id:'r3', name:'Room B — Rift', capacity: 250, icon:'🏞️' },
+            { id:'r4', name:'Room C — Victoria', capacity: 180, icon:'🌊' },
+            { id:'r5', name:'Networking Lounge', capacity: 400, icon:'🤝' },
+        ];
+        
+        const SESSIONS = [
+            { id:'s1', day:1, title:'Opening Ceremony', track:'Plenary', time:'09:00', end:'10:00', room:'r1', speaker:'sp2', type:'Keynote', attendees: 1120, live:true, description:'Official welcome to Africa Business Summit 2026.' },
+            { id:'s2', day:1, title:'Africa Economic Outlook 2027', track:'Macro', time:'10:30', end:'11:45', room:'r1', speaker:'sp2', type:'Panel', attendees: 980, live:false, description:'Leading economists forecast the next chapter of African growth.' },
+            { id:'s3', day:1, title:'AI & The Future of African Business', track:'Technology', time:'12:00', end:'13:15', room:'r1', speaker:'sp1', type:'Keynote', attendees: 1085, live:true, description:'How artificial intelligence is reshaping industries across the continent.' },
+            { id:'s4', day:1, title:'CEO Leadership Forum', track:'Leadership', time:'14:30', end:'16:00', room:'r2', speaker:'sp4', type:'Fireside', attendees: 285, live:false, description:'Intimate conversation with Africa\'s most influential CEOs.' },
+            { id:'s5', day:1, title:'Investment Opportunities in Africa', track:'Capital', time:'14:30', end:'16:00', room:'r3', speaker:'sp3', type:'Panel', attendees: 230, live:false, description:'Where smart money is going — and where it should go next.' },
+        ];
+        
+        const POLLS = [
+            {
+                id:'p1',
+                question:'What will have the biggest impact on African businesses over the next 5 years?',
+                options:[
+                    { label:'AI', votes: 917 },
+                    { label:'FinTech', votes: 590 },
+                    { label:'Digital Infrastructure', votes: 350 },
+                    { label:'Manufacturing', votes: 196 },
+                    { label:'Climate Technology', votes: 131 },
+                ],
+                total: 2184,
+            },
+        ];
+        
+        const QUESTIONS = [
+            { id:'q1', session:'s3', author:'Sarah Mwangi', text:'Will AI eliminate more jobs than it creates?', votes: 142, time:'12:18', pinned:true },
+            { id:'q2', session:'s3', author:'David Kamau', text:'Which African markets should investors watch?', votes: 98, time:'12:24', pinned:false },
+            { id:'q3', session:'s3', author:'Amina Yusuf', text:'How do we ensure AI benefits reach rural communities?', votes: 87, time:'12:31', pinned:false },
+        ];
+        
+        const NOTIFICATIONS = [
+            { id:'a1', title:'Main Hall session starts soon', message:'AI & The Future of African Business begins in 10 minutes.', time:'08:52', priority:'high', read:false },
+            { id:'a2', title:'Connection accepted', message:'Sarah Mwangi accepted your connection request.', time:'08:41', priority:'normal', read:false },
+            { id:'a3', title:'New speaker question', message:'A new question was posted for Dr. Amara Okafor\'s session.', time:'08:22', priority:'normal', read:false },
+        ];
+        
+        const AI_RESPONSES = {
+            sessions_today: "Based on your interests, I recommend:\n\n1. **AI & The Future of African Business** — Main Stage, 12:00 PM\n2. **Investment Opportunities in Africa** — Room B, 2:30 PM\n\nI've saved these to your schedule.",
+            investors: "I found **14 investors** attending. Top matches:\n\n• **Nadia El-Sayed** — Cairo Capital\n• **Samuel Wafula** — Equator Ventures\n\nWant me to request introductions?",
+            default: "I'm analyzing the event data. What can I help you with?",
+        };
+        
+        // ============ COMPONENTS ============
+        
+        function Counter({ to, duration = 1400 }) {
+            const [val, setVal] = useState(0);
+            useEffect(() => {
+                let start = null;
+                const step = (ts) => {
+                    if (!start) start = ts;
+                    const p = Math.min((ts - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - p, 3);
+                    setVal(Math.floor(to * eased));
+                    if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }, [to, duration]);
+            return <span>{val.toLocaleString()}</span>;
+        }
+        
+        function Badge({ children, tone = 'default', dot }) {
+            const tones = {
+                default: 'bg-white/5 text-white/70 border-white/10',
+                gold: 'bg-champagne-400/10 text-champagne-300 border-champagne-400/20',
+                green: 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20',
+                red: 'bg-rose-400/10 text-rose-300 border-rose-400/20',
+            };
+            return (
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${tones[tone]}`}>
+                    {dot && <span className={`w-1.5 h-1.5 rounded-full ${tone === 'green' ? 'bg-emerald-400' : tone === 'red' ? 'bg-rose-400' : 'bg-white/50'}`} />}
+                    {children}
+                </span>
+            );
+        }
+        
+        function Button({ children, variant = 'primary', size = 'md', className = '', ...props }) {
+            const base = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 rounded-xl';
+            const sizes = { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2.5 text-sm', lg: 'px-6 py-3.5 text-base' };
+            const variants = {
+                primary: 'bg-gradient-to-b from-champagne-300 to-champagne-500 text-ink-900 hover:from-champagne-200 hover:to-champagne-400 shadow-glow',
+                ghost: 'bg-white/5 text-white/80 border border-white/10 hover:bg-white/10',
+                outline: 'border border-champagne-400/30 text-champagne-300 hover:bg-champagne-400/10',
+            };
+            return <button className={`${base} ${sizes[size]} ${variants[variant]} ${className}`} {...props}>{children}</button>;
+        }
+        
+        function Card({ children, className = '' }) {
+            return <div className={`glass rounded-2xl border border-white/5 card-lift ${className}`}>{children}</div>;
+        }
+        
+        function Progress({ value, tone = 'gold' }) {
+            const tones = {
+                gold: 'from-champagne-300 to-champagne-500',
+                green: 'from-emerald-400 to-emerald-600',
+            };
+            return (
+                <div className="w-full">
+                    <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${value}%` }}
+                            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                            className={`h-full rounded-full bg-gradient-to-r ${tones[tone]}`}
+                        />
+                    </div>
+                </div>
+            );
+        }
+        
+        function Avatar({ name, size = 40 }) {
+            const initials = name ? name.split(' ').map(p => p[0]).slice(0,2).join('') : '?';
+            return (
+                <div className="rounded-full bg-champagne-500/20 text-champagne-300 flex items-center justify-center font-semibold flex-shrink-0" style={{ width: size, height: size, fontSize: size * 0.38 }}>
+                    {initials}
+                </div>
+            );
+        }
+        
+        // ============ LANDING ============
+        
+        function Landing({ onEnter }) {
+            const [time, setTime] = useState({});
+            useEffect(() => {
+                const update = () => {
+                    const diff = EVENT.startDate - new Date();
+                    if (diff <= 0) return setTime({ d:0, h:0, m:0, s:0 });
+                    setTime({
+                        d: Math.floor(diff / 86400000),
+                        h: Math.floor((diff / 3600000) % 24),
+                        m: Math.floor((diff / 60000) % 60),
+                        s: Math.floor((diff / 1000) % 60),
+                    });
+                };
+                update();
+                const id = setInterval(update, 1000);
+                return () => clearInterval(id);
+            }, []);
+            
+            return (
+                <div className="relative min-h-screen overflow-hidden bg-ink-900">
+                    <div className="absolute inset-0 bg-grid-pattern opacity-40" />
+                    <div className="absolute inset-0 bg-radial-gold" />
+                    <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-champagne-400/10 blur-3xl" />
+                    
+                    <header className="relative z-20 flex items-center justify-between px-6 md:px-10 py-5">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow">
+                                <svg className="w-5 h-5 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div className="text-sm font-semibold tracking-tight text-white">EVENT COMMANDER</div>
+                                <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Operating System</div>
+                            </div>
+                        </div>
+                        <Button onClick={onEnter} size="sm">Launch Demo →</Button>
+                    </header>
+                    
+                    <section className="relative z-10 px-6 md:px-10 pt-10 md:pt-16 pb-24 max-w-7xl mx-auto">
+                        <div className="text-center mb-12">
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-champagne-400/20 bg-champagne-400/5 text-xs text-champagne-300 mb-6">
+                                ✨ Introducing Event Commander 1.0
+                            </div>
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.02em] leading-[1.02] text-white">
+                                Run your entire event from{' '}
+                                <span className="text-gold-gradient">one command center.</span>
+                            </h1>
+                            <p className="mt-6 text-base md:text-lg text-white/60 max-w-xl mx-auto">
+                                Event Commander brings attendees, speakers, sponsors, tickets, engagement, payments and event intelligence into one powerful operating system.
+                            </p>
+                            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                                <Button size="lg" onClick={onEnter}>Launch Demo →</Button>
+                                <Button variant="ghost" size="lg" onClick={onEnter}>Explore Platform</Button>
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 max-w-3xl mx-auto">
+                            {[
+                                { label:'Attendees', value: EVENT.attendees },
+                                { label:'Speakers', value: EVENT.speakers },
+                                { label:'Sponsors', value: EVENT.sponsors },
+                                { label:'Sessions', value: EVENT.sessions },
+                                { label:'Engagement', value: EVENT.engagement, suffix:'%' },
+                            ].map((m, i) => (
+                                <div key={m.label} className="text-center">
+                                    <div className="text-2xl md:text-3xl font-semibold text-white">
+                                        <Counter to={m.value} />{m.suffix}
+                                    </div>
+                                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/40 mt-1">{m.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="mt-20 relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950">
+                            <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+                            <div className="relative p-8 md:p-12">
+                                <div className="text-[11px] uppercase tracking-[0.25em] text-champagne-400 mb-4">Flagship Event</div>
+                                <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-white">{EVENT.name}</h3>
+                                <p className="mt-3 text-lg text-white/60 italic">{EVENT.tagline}</p>
+                                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/70">
+                                    <div>🌍 {EVENT.city}, {EVENT.country}</div>
+                                    <div>{EVENT.dates}</div>
+                                    <div className="text-white/50">{EVENT.venue}</div>
+                                </div>
+                                <div className="mt-8 grid grid-cols-4 gap-3 max-w-md">
+                                    {[
+                                        { l:'Days', v: time.d },
+                                        { l:'Hours', v: time.h },
+                                        { l:'Minutes', v: time.m },
+                                        { l:'Seconds', v: time.s },
+                                    ].map(u => (
+                                        <div key={u.l} className="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
+                                            <div className="text-2xl md:text-3xl font-semibold text-gold-gradient">{String(u.v).padStart(2,'0')}</div>
+                                            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">{u.l}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        }
+        
+        // ============ ROLE SELECT ============
+        
+        function RoleSelect({ onSelect }) {
+            return (
+                <div className="min-h-screen bg-ink-900 relative overflow-hidden flex items-center justify-center p-6">
+                    <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-champagne-400/10 blur-3xl rounded-full" />
+                    
+                    <div className="relative max-w-4xl w-full">
+                        <div className="text-center mb-10">
+                            <div className="text-[11px] uppercase tracking-[0.25em] text-champagne-400 mb-3">Choose your experience</div>
+                            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-white">Enter the Command Center.</h1>
+                            <p className="mt-3 text-white/50 max-w-xl mx-auto">Select how you'd like to explore Event Commander.</p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <button onClick={() => onSelect('attendee')} className="group glass rounded-3xl p-8 border border-white/5 hover:border-champagne-400/30 transition text-left relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                                <div className="relative">
+                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow mb-5">
+                                        <svg className="w-7 h-7 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                    </div>
+                                    <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Attendee Experience</div>
+                                    <div className="text-2xl font-semibold text-white mb-2">Join the Event</div>
+                                    <p className="text-sm text-white/55 leading-relaxed mb-5">Access your digital ticket, explore the agenda, network with attendees, engage with speakers and earn points.</p>
+                                    <div className="flex items-center gap-2 text-sm text-champagne-300 font-medium">Enter as Graham Esonga →</div>
+                                </div>
+                            </button>
+                            
+                            <button onClick={() => onSelect('organizer')} className="group glass rounded-3xl p-8 border border-white/5 hover:border-champagne-400/30 transition text-left relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                                <div className="relative">
+                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow mb-5">
+                                        <svg className="w-7 h-7 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                                    </div>
+                                    <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Organizer Command Center</div>
+                                    <div className="text-2xl font-semibold text-white mb-2">Run the Event</div>
+                                    <p className="text-sm text-white/55 leading-relaxed mb-5">Full operational control — attendance, revenue, speakers, sponsors, AI insights, live operations and Command Mode.</p>
+                                    <div className="flex items-center gap-2 text-sm text-champagne-300 font-medium">Enter Command Center →</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // ============ ATTENDEE ============
+        
+        function Attendee({ onBack }) {
+            const [section, setSection] = useState('home');
+            const [savedSessions, setSavedSessions] = useState(['s3','s5']);
+            const [notifications, setNotifications] = useState(NOTIFICATIONS);
+            const [toast, setToast] = useState(null);
+            
+            const showToast = (msg) => {
+                setToast(msg);
+                setTimeout(() => setToast(null), 3000);
+            };
+            
+            const unread = notifications.filter(n => !n.read).length;
+            
+            return (
+                <div className="min-h-screen bg-ink-900">
+                    <header className="sticky top-0 z-30 glass border-b border-white/5">
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <Avatar name={CURRENT_USER.name} size={38} />
+                                <div>
+                                    <div className="text-xs text-white/50">Good morning,</div>
+                                    <div className="text-sm font-semibold text-white">{CURRENT_USER.firstName}.</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Badge tone="gold" dot>ABS 2026</Badge>
+                                <Badge tone="green" dot>Day 1 — Live</Badge>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => setSection('notifications')} className="relative w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                    <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                                    {unread > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-ember-500 text-[10px] font-bold text-white flex items-center justify-center">{unread}</span>}
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
+                        {section === 'home' && (
+                            <div className="space-y-8">
+                                <div>
+                                    <div className="text-xs uppercase tracking-[0.2em] text-champagne-400/80">Welcome to</div>
+                                    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mt-1">Africa Business Summit 2026.</h1>
+                                    <p className="text-white/50 mt-2">Nairobi, Kenya · Day 1 of 3</p>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    {[
+                                        { l:'Your Points', v: CURRENT_USER.points, icon:'⚡' },
+                                        { l:'Connections', v: CURRENT_USER.connections, icon:'🤝' },
+                                        { l:'Saved Sessions', v: savedSessions.length, icon:'📌' },
+                                        { l:'Rank', v:'#3', icon:'🏆' },
+                                    ].map(s => (
+                                        <Card key={s.l} className="p-4">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <div className="text-[11px] uppercase tracking-wider text-white/40">{s.l}</div>
+                                                    <div className="text-2xl font-semibold text-white mt-1">{s.v}</div>
+                                                </div>
+                                                <div className="text-2xl">{s.icon}</div>
+                                            </div>
+                                        </Card>
+                                    ))}
+                                </div>
+                                
+                                <div>
+                                    <h2 className="text-xl font-semibold text-white mb-4">Today's Schedule</h2>
+                                    <div className="space-y-2">
+                                        {SESSIONS.slice(0, 4).map(s => (
+                                            <Card key={s.id} className="p-4 flex items-center gap-4">
+                                                <div className="flex-shrink-0 w-16 text-center">
+                                                    <div className="text-sm font-semibold text-champagne-300">{s.time}</div>
+                                                    <div className="text-[10px] text-white/40 uppercase">{s.track}</div>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="text-sm font-medium text-white">{s.title}</div>
+                                                        {s.live && <Badge tone="green" dot>LIVE</Badge>}
+                                                    </div>
+                                                    <div className="text-xs text-white/50 mt-0.5">{ROOMS.find(r => r.id === s.room)?.name} · {s.attendees} attending</div>
+                                                </div>
+                                                <button onClick={() => { setSavedSessions(prev => prev.includes(s.id) ? prev.filter(x => x !== s.id) : [...prev, s.id]); showToast('Session saved'); }} className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
+                                                    <svg className={`w-4 h-4 ${savedSessions.includes(s.id) ? 'text-champagne-300' : 'text-white/50'}`} fill={savedSessions.includes(s.id) ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                                                </button>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {section === 'ticket' && (
+                            <div className="max-w-2xl mx-auto">
+                                <h1 className="text-3xl font-semibold text-white mb-6">Your Digital Ticket</h1>
+                                <Card className="p-6 relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent pointer-events-none" />
+                                    <div className="relative">
+                                        <div className="text-[10px] uppercase tracking-[0.25em] text-champagne-300">Event Commander presents</div>
+                                        <div className="text-2xl font-semibold text-white mt-1">AFRICA BUSINESS SUMMIT</div>
+                                        <div className="text-gold-gradient text-sm font-medium">2026 · NAIROBI</div>
+                                        
+                                        <div className="mt-6 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Attendee</div>
+                                                <div className="text-base font-semibold text-white mt-1">{CURRENT_USER.name}</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Pass Type</div>
+                                                <div className="text-base font-semibold text-champagne-300 mt-1">{CURRENT_USER.pass} PASS</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Date</div>
+                                                <div className="text-sm font-medium text-white mt-1">Oct 14–16, 2026</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Venue</div>
+                                                <div className="text-sm font-medium text-white mt-1">KICC, Nairobi</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="mt-6 p-3 border-y border-white/5 bg-white/[0.02] flex items-center justify-between">
+                                            <div>
+                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Ticket ID</div>
+                                                <div className="text-sm font-mono font-semibold text-white">{CURRENT_USER.id}</div>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 text-emerald-300 text-xs font-semibold">
+                                                <span className="live-dot" /> VERIFIED
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="mt-6 flex flex-col items-center">
+                                            <div className="p-4 bg-pearl rounded-2xl">
+                                                <svg width="200" height="200" viewBox="0 0 200 200" className="text-ink-900">
+                                                    <rect width="200" height="200" fill="#f5f5f0" />
+                                                    {/* Simplified QR pattern */}
+                                                    {Array.from({ length: 29 }).map((_, y) =>
+                                                        Array.from({ length: 29 }).map((_, x) => {
+                                                            const isFinder = (x < 7 && y < 7) || (x >= 22 && y < 7) || (x < 7 && y >= 22);
+                                                            const dark = isFinder || Math.random() > 0.5;
+                                                            return dark ? <rect key={`${x}-${y}`} x={x*6.9} y={y*6.9} width="6.9" height="6.9" fill="currentColor" /> : null;
+                                                        })
+                                                    )}
+                                                </svg>
+                                            </div>
+                                            <div className="text-xs text-white/40 mt-3">Scan at entry</div>
+                                        </div>
+                                        
+                                        <div className="mt-6 grid grid-cols-2 gap-3">
+                                            <Button variant="ghost">📱 Add to Wallet</Button>
+                                            <Button variant="outline">📤 Share Ticket</Button>
+                                        </div>
+                                    </div>
+                                </Card>
+                            </div>
+                        )}
+                        
+                        {section === 'notifications' && (
+                            <div>
+                                <h1 className="text-3xl font-semibold text-white mb-6">Notifications</h1>
+                                <div className="space-y-2">
+                                    {notifications.map(n => (
+                                        <Card key={n.id} className={`p-4 flex items-start gap-3 ${!n.read && 'border-champagne-400/20'}`}>
+                                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${n.priority === 'high' ? 'bg-ember-500/20 text-ember-400' : 'bg-champagne-400/15 text-champagne-300'}`}>
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="text-sm font-medium text-white">{n.title}</div>
+                                                    <div className="text-[11px] text-white/40">{n.time}</div>
+                                                </div>
+                                                <div className="text-xs text-white/55 mt-1">{n.message}</div>
+                                            </div>
+                                            {!n.read && <button onClick={() => { setNotifications(prev => prev.map(x => x.id === n.id ? {...x, read: true} : x)); showToast('Marked as read'); }} className="text-[11px] text-champagne-300">Mark read</button>}
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                    
+                    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 glass border-t border-white/10 px-2 py-2 flex items-center justify-around">
+                        {[
+                            { id:'home', label:'Home', icon:'🏠' },
+                            { id:'agenda', label:'Agenda', icon:'📅' },
+                            { id:'ticket', label:'Ticket', icon:'🎫' },
+                            { id:'network', label:'Network', icon:'🤝' },
+                            { id:'profile', label:'Profile', icon:'👤' },
+                        ].map(t => (
+                            <button key={t.id} onClick={() => setSection(t.id)} className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl ${section === t.id ? 'text-champagne-300' : 'text-white/50'}`}>
+                                <span className="text-xl">{t.icon}</span>
+                                <span className="text-[10px] font-medium">{t.label}</span>
+                            </button>
+                        ))}
+                    </nav>
+                    
+                    {toast && (
+                        <div className="fixed bottom-24 md:bottom-6 right-6 z-50 glass rounded-xl px-4 py-3 border border-white/10 shadow-soft flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                            <div className="text-sm text-white/90">{toast}</div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+        
+        // ============ ORGANIZER ============
+        
+        function Organizer({ onBack }) {
+            const [section, setSection] = useState('overview');
+            
+            return (
+                <div className="min-h-screen bg-ink-900 flex">
+                    <aside className="hidden lg:flex w-72 glass border-r border-white/5 flex-col">
+                        <div className="p-5 border-b border-white/5">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow">
+                                    <svg className="w-5 h-5 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                                </div>
+                                <div>
+                                    <div className="text-sm font-semibold text-white">EVENT COMMANDER</div>
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Command Center</div>
+                                </div>
+                            </div>
+                        </div>
+                        <nav className="flex-1 overflow-y-auto p-3">
+                            {[
+                                { id:'overview', label:'Overview', icon:'📊' },
+                                { id:'attendance', label:'Attendance', icon:'👥' },
+                                { id:'tickets', label:'Tickets', icon:'🎫' },
+                                { id:'sessions', label:'Sessions', icon:'📅' },
+                                { id:'speakers', label:'Speakers', icon:'🎤' },
+                                { id:'sponsors', label:'Sponsors', icon:'🏢' },
+                                { id:'revenue', label:'Revenue', icon:'💰' },
+                                { id:'intelligence', label:'Intelligence', icon:'🧠' },
+                                { id:'operations', label:'Operations', icon:'⚙️' },
+                            ].map(item => (
+                                <button key={item.id} onClick={() => setSection(item.id)} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm mb-1 ${section === item.id ? 'bg-champagne-400/15 text-champagne-300 border border-champagne-400/20' : 'text-white/60 hover:bg-white/5'}`}>
+                                    <span>{item.icon}</span>
+                                    <span>{item.label}</span>
+                                </button>
+                            ))}
+                        </nav>
+                    </aside>
+                    
+                    <div className="flex-1">
+                        <header className="sticky top-0 z-30 glass border-b border-white/5">
+                            <div className="px-4 md:px-8 py-3 flex items-center justify-between">
+                                <div>
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Command Center</div>
+                                    <div className="text-sm font-semibold text-white">{EVENT.name}</div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Badge tone="green" dot>LIVE</Badge>
+                                    <Badge>Day 1 · 09:42 AM</Badge>
+                                </div>
+                            </div>
+                        </header>
+                        
+                        <main className="px-4 md:px-8 py-6">
+                            {section === 'overview' && (
+                                <div>
+                                    <h1 className="text-3xl font-semibold text-white mb-6">Event Command Center</h1>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
+                                        {[
+                                            { l:'Attendees', v: 2847, d:'+18.4%' },
+                                            { l:'Checked In', v: 2391, d:'84%' },
+                                            { l:'Revenue', v: 'KES 18.7M', d:'+12.6%' },
+                                            { l:'Engagement', v: '91.4%', d:'+7.2%' },
+                                            { l:'Sponsors', v: 42 },
+                                            { l:'Sessions', v: 18 },
+                                        ].map(s => (
+                                            <Card key={s.l} className="p-5">
+                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
+                                                <div className="text-2xl font-semibold text-white mt-2">{s.v}</div>
+                                                {s.d && <div className="text-xs text-emerald-400 mt-1">▲ {s.d}</div>}
+                                            </Card>
+                                        ))}
+                                    </div>
+                                    
+                                    <Card className="p-6 mb-4">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="text-sm font-semibold text-white">Live Attendance</div>
+                                            <Badge tone="green" dot>Live</Badge>
+                                        </div>
+                                        <div className="text-4xl font-semibold text-white">2,391 <span className="text-white/40 text-lg">/ 2,847</span></div>
+                                        <div className="mt-3"><Progress value={84} /></div>
+                                    </Card>
+                                    
+                                    <Card className="p-6 relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent pointer-events-none" />
+                                        <div className="relative flex items-start gap-4">
+                                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center flex-shrink-0 shadow-glow">
+                                                <span className="text-xl">✨</span>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Commander Insight</div>
+                                                <div className="text-sm text-white/90">
+                                                    <strong>AI & The Future of African Business</strong> is currently the highest-engaged session, with <strong>94% attendee participation</strong>.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </div>
+                            )}
+                            
+                            {section === 'attendance' && (
+                                <div>
+                                    <h1 className="text-3xl font-semibold text-white mb-6">Attendance Analytics</h1>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                                        {[
+                                            { l:'Registered', v: 2847 },
+                                            { l:'Checked In', v: 2391 },
+                                            { l:'No-show Rate', v: '16%' },
+                                            { l:'Avg Session', v: '84%' },
+                                        ].map(s => (
+                                            <Card key={s.l} className="p-5">
+                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
+                                                <div className="text-2xl font-semibold text-white mt-2">{s.v}</div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {section === 'revenue' && (
+                                <div>
+                                    <h1 className="text-3xl font-semibold text-white mb-6">Revenue Dashboard</h1>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                                        {[
+                                            { l:'Total Revenue', v: 'KES 103.6M' },
+                                            { l:'Tickets', v: 'KES 77.1M' },
+                                            { l:'Sponsors', v: 'KES 20.5M' },
+                                            { l:'Target', v: '87%' },
+                                        ].map(s => (
+                                            <Card key={s.l} className="p-5">
+                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
+                                                <div className="text-2xl font-semibold text-champagne-300 mt-2">{s.v}</div>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {section === 'intelligence' && (
+                                <div>
+                                    <h1 className="text-3xl font-semibold text-white mb-6">Event Intelligence</h1>
+                                    <Card className="p-8 mb-6">
+                                        <div className="text-center">
+                                            <div className="text-6xl font-semibold text-gold-gradient">91.8</div>
+                                            <div className="text-sm text-white/50 mt-2">Event Success Score</div>
+                                        </div>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">
+                                            {[
+                                                { l:'Event Health', v: 92 },
+                                                { l:'Attendance', v: 88 },
+                                                { l:'Engagement', v: 94 },
+                                                { l:'Sponsors', v: 89 },
+                                                { l:'Revenue', v: 91 },
+                                                { l:'Networking', v: 87 },
+                                            ].map(s => (
+                                                <div key={s.l} className="rounded-xl bg-white/5 border border-white/5 p-3">
+                                                    <div className="text-xs text-white/60">{s.l}</div>
+                                                    <div className="text-xl font-semibold text-white mt-1">{s.v}/100</div>
+                                                    <div className="mt-2"><Progress value={s.v} /></div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </Card>
+                                </div>
+                            )}
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+        
+        // ============ APP ============
+        
+        function App() {
+            const [view, setView] = useState('landing');
+            const [role, setRole] = useState(null);
+            
+            return (
+                <div>
+                    {view === 'landing' && <Landing onEnter={() => setView('role')} />}
+                    {view === 'role' && <RoleSelect onSelect={(r) => { setRole(r); setView(r); }} />}
+                    {view === 'attendee' && <Attendee />}
+                    {view === 'organizer' && <Organizer />}
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
 </html>
