@@ -1,870 +1,1571 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVENT COMMANDER — Command the Event. Connect the People. Measure the Impact.</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    
-    <!-- Recharts -->
-    <script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        ink: {
-                            950: '#050505',
-                            900: '#0a0a0a',
-                            850: '#0f0f10',
-                            800: '#141416',
-                            700: '#1c1c1f',
-                            600: '#26262a',
-                            500: '#3a3a40',
-                        },
-                        champagne: {
-                            50:  '#fbf6e7',
-                            100: '#f5e9c2',
-                            200: '#ebd78f',
-                            300: '#dfc064',
-                            400: '#d4af37',
-                            500: '#c9a961',
-                            600: '#a8873a',
-                            700: '#7d6528',
-                        },
-                        pearl: '#f5f5f0',
-                        ember: {
-                            400: '#ea580c',
-                            500: '#c2410c',
-                            600: '#9a3412',
-                        },
-                    },
-                }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPPLY360 • Intelligence Platform</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+:root{
+    --green:#087f3f;
+    --dark-green:#04552b;
+    --light-green:#eaf8ef;
+    --lighter-green:#f5fcf7;
+    --accent:#19a85a;
+    --white:#ffffff;
+    --black:#122018;
+    --gray:#64748b;
+    --light-gray:#eef2f4;
+    --danger:#dc3545;
+    --warning:#e99b00;
+    --shadow:0 8px 25px rgba(0,70,35,.08);
+    --card-bg:#ffffff;
+    --bg:#f5f8f6;
+    --border:#edf1ee;
+    --text:#122018;
+    --text-muted:#64748b;
+    --sidebar-bg:linear-gradient(180deg,#075b30,#043b20);
+    --sidebar-text:#ffffff;
+}
+
+[data-theme="dark"]{
+    --green:#19a85a;
+    --dark-green:#0d5e34;
+    --light-green:#0f2b1c;
+    --lighter-green:#0a1f15;
+    --accent:#22c55e;
+    --white:#0f1812;
+    --black:#f5f8f6;
+    --gray:#94a3b8;
+    --light-gray:#1e2924;
+    --shadow:0 8px 25px rgba(0,0,0,.4);
+    --card-bg:#162420;
+    --bg:#0b120e;
+    --border:#1f2e28;
+    --text:#f5f8f6;
+    --text-muted:#94a3b8;
+    --sidebar-bg:linear-gradient(180deg,#0a1f15,#050f0a);
+    --sidebar-text:#e5f8ec;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:background .3s ease,color .3s ease;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    left:0;top:0;bottom:0;
+    width:270px;
+    background:var(--sidebar-bg);
+    color:var(--sidebar-text);
+    padding:25px 18px;
+    overflow-y:auto;
+    z-index:30;
+}
+
+.logo{font-size:22px;font-weight:800;margin-bottom:4px}
+.logo span{color:#72e49c}
+.logo-subtitle{font-size:11px;opacity:.65;margin-bottom:25px}
+
+.live-dot{
+    display:inline-block;
+    width:8px;height:8px;
+    background:#22c55e;
+    border-radius:50%;
+    margin-right:6px;
+    animation:pulse 2s infinite;
+}
+@keyframes pulse{
+    0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.7)}
+    50%{opacity:.6;box-shadow:0 0 0 6px rgba(34,197,94,0)}
+}
+
+.menu-title{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    opacity:.55;
+    margin:22px 12px 10px;
+}
+
+.nav-item{
+    padding:12px 14px;
+    margin:4px 0;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-size:13px;
+    transition:.2s;
+}
+.nav-item:hover{background:rgba(255,255,255,.1)}
+.nav-item.active{background:#19a85a;box-shadow:0 5px 15px rgba(0,0,0,.15)}
+
+.submenu{display:none;margin-left:18px}
+.submenu.show{display:block}
+.sub-item{
+    padding:9px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:12px;
+    opacity:.85;
+}
+.sub-item:hover{background:rgba(255,255,255,.08)}
+
+/* MAIN */
+.main{margin-left:270px;min-height:100vh}
+
+/* HEADER */
+.header{
+    height:75px;
+    background:var(--card-bg);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    transition:background .3s ease;
+}
+
+.page-title{font-size:21px;font-weight:800}
+.breadcrumb{color:var(--text-muted);font-size:11px;margin-top:4px}
+
+.header-right{display:flex;align-items:center;gap:14px}
+
+.date{color:var(--text-muted);font-size:12px}
+
+.search-trigger{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--light-green);
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:11px;
+    color:var(--text-muted);
+    cursor:pointer;
+    border:1px solid var(--border);
+}
+.search-trigger:hover{background:var(--lighter-green)}
+.search-trigger kbd{
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    padding:1px 5px;
+    border-radius:4px;
+    font-size:9px;
+    font-family:inherit;
+}
+
+.icon-btn{
+    width:38px;height:38px;
+    border-radius:50%;
+    background:var(--light-green);
+    color:var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    border:none;
+    position:relative;
+    font-size:15px;
+    transition:.2s;
+}
+.icon-btn:hover{background:var(--green);color:white}
+.icon-btn .badge{
+    position:absolute;
+    top:-3px;right:-3px;
+    background:var(--danger);
+    color:white;
+    font-size:9px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:10px;
+    border:2px solid var(--card-bg);
+}
+
+.profile{
+    width:38px;height:38px;
+    background:var(--green);
+    color:white;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+}
+
+/* CONTENT */
+.content{padding:30px}
+
+.welcome{margin-bottom:25px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px}
+.welcome h1{font-size:26px;margin-bottom:6px}
+.welcome p{color:var(--text-muted);font-size:13px}
+
+.date-range{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--card-bg);
+    padding:8px 14px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    font-size:12px;
+    cursor:pointer;
+}
+.date-range:hover{border-color:var(--green)}
+
+/* KPIs */
+.kpis{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.kpi{
+    background:var(--card-bg);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--border);
+    transition:.25s;
+    position:relative;
+    overflow:hidden;
+}
+.kpi:hover{transform:translateY(-3px);border-color:var(--accent)}
+.kpi-top{display:flex;justify-content:space-between;align-items:center}
+.kpi-icon{
+    width:38px;height:38px;
+    border-radius:10px;
+    background:var(--light-green);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--green);
+}
+.kpi-label{color:var(--text-muted);font-size:12px;margin-top:15px}
+.kpi-value{font-size:27px;font-weight:800;margin:5px 0}
+.kpi-change{font-size:11px;color:var(--green);font-weight:600}
+.kpi-change.negative{color:var(--danger)}
+.kpi-sparkline{position:absolute;bottom:0;right:0;opacity:.3;width:90px;height:35px}
+
+/* SECTION */
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:25px 0 14px;flex-wrap:wrap;gap:10px}
+.section-title h2{font-size:16px}
+.section-title span{font-size:11px;color:var(--text-muted)}
+
+/* REPORT BUTTONS */
+.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+.report-card{
+    background:var(--card-bg);
+    padding:18px;
+    border-radius:14px;
+    cursor:pointer;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    transition:.25s;
+    position:relative;
+}
+.report-card:hover{transform:translateY(-3px);border-color:#9adbb5}
+.report-icon{
+    width:42px;height:42px;
+    background:var(--light-green);
+    color:var(--green);
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    margin-bottom:12px;
+}
+.report-card h3{font-size:13px;margin-bottom:6px}
+.report-card p{color:var(--text-muted);font-size:10px;line-height:1.5}
+.report-card .trend{
+    position:absolute;
+    top:14px;right:14px;
+    font-size:10px;
+    font-weight:700;
+    color:var(--green);
+    background:var(--light-green);
+    padding:3px 8px;
+    border-radius:6px;
+}
+
+/* GRID LAYOUTS */
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.split{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:20px}
+
+/* CHARTS */
+.chart-card{
+    background:var(--card-bg);
+    border-radius:15px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--border);
+}
+.chart-header{display:flex;justify-content:space-between;margin-bottom:20px;align-items:center;flex-wrap:wrap;gap:10px}
+.chart-header h3{font-size:14px}
+.chart-header select{
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:6px 9px;
+    font-size:11px;
+    background:var(--card-bg);
+    color:var(--text);
+}
+
+/* AI INSIGHTS */
+.insights-card{
+    background:var(--card-bg);
+    border-radius:15px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--border);
+}
+.insight-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--border);
+}
+.insight-badge{
+    background:linear-gradient(135deg,#19a85a,#087f3f);
+    color:white;
+    font-size:9px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:6px;
+    letter-spacing:.5px;
+}
+.insight-header h3{font-size:14px}
+
+.insight{
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+    border-left:3px solid;
+    background:var(--lighter-green);
+    cursor:pointer;
+    transition:.2s;
+}
+.insight:hover{transform:translateX(4px)}
+.insight.critical{border-left-color:var(--danger);background:rgba(220,53,69,.06)}
+.insight.warning{border-left-color:var(--warning);background:rgba(233,155,0,.06)}
+.insight.info{border-left-color:var(--green);background:var(--lighter-green)}
+.insight-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.insight-head strong{font-size:12px}
+.insight-time{font-size:10px;color:var(--text-muted)}
+.insight-body{font-size:11px;color:var(--text-muted);line-height:1.5}
+.insight-action{
+    font-size:10px;
+    color:var(--green);
+    font-weight:600;
+    margin-top:8px;
+    display:inline-block;
+}
+
+/* NETWORK MAP */
+.network-map{
+    background:var(--card-bg);
+    border-radius:15px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--border);
+    position:relative;
+    overflow:hidden;
+}
+.network-map h3{font-size:14px;margin-bottom:14px}
+.network-svg{
+    width:100%;
+    height:280px;
+    display:block;
+}
+.network-legend{
+    display:flex;
+    gap:14px;
+    margin-top:14px;
+    flex-wrap:wrap;
+    font-size:10px;
+    color:var(--text-muted);
+}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* TABLE */
+.table-card{
+    background:var(--card-bg);
+    border-radius:15px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-top:20px;
+    border:1px solid var(--border);
+}
+.table-header{
+    padding:18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+}
+.table-header h3{font-size:14px}
+.table-controls{display:flex;gap:8px;align-items:center}
+.table-search{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:7px 12px;
+    font-size:11px;
+    background:var(--card-bg);
+    color:var(--text);
+    width:180px;
+    font-family:inherit;
+}
+.table-search:focus{outline:2px solid var(--green)}
+.filter-btn{
+    border:1px solid var(--border);
+    background:var(--card-bg);
+    color:var(--text);
+    padding:7px 12px;
+    border-radius:8px;
+    font-size:11px;
+    cursor:pointer;
+}
+.filter-btn.active{background:var(--green);color:white;border-color:var(--green)}
+
+button{border:none;cursor:pointer;font-family:inherit}
+.download-btn{
+    background:var(--green);
+    color:white;
+    padding:9px 14px;
+    border-radius:8px;
+    font-size:11px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+.download-btn:hover{background:var(--dark-green)}
+
+table{width:100%;border-collapse:collapse}
+th{
+    text-align:left;
+    background:var(--lighter-green);
+    padding:13px 20px;
+    font-size:10px;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    font-weight:700;
+    letter-spacing:.5px;
+    cursor:pointer;
+    user-select:none;
+}
+th:hover{color:var(--green)}
+th .sort-indicator{opacity:.4;margin-left:4px;font-size:9px}
+td{padding:15px 20px;font-size:11px;border-top:1px solid var(--border)}
+tr:hover td{background:var(--lighter-green)}
+
+.status{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:700;
+}
+.status.good{background:#e5f8ec;color:#087f3f}
+.status.warning{background:#fff5dd;color:#a36b00}
+.status.bad{background:#fde9ec;color:#c92d3d}
+.status.info{background:#e0f2fe;color:#0369a1}
+
+[data-theme="dark"] .status.good{background:#0f2b1c;color:#22c55e}
+[data-theme="dark"] .status.warning{background:#2b2308;color:#e99b00}
+[data-theme="dark"] .status.bad{background:#2b0d13;color:#ef4444}
+[data-theme="dark"] .status.info{background:#0c2333;color:#38bdf8}
+
+.tier-badge{
+    font-size:9px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:4px;
+    letter-spacing:.5px;
+}
+.tier.gold{background:#fef3c7;color:#92400e}
+.tier.silver{background:#e5e7eb;color:#374151}
+.tier.bronze{background:#fed7aa;color:#9a3412}
+[data-theme="dark"] .tier.gold{background:#3d2f08;color:#fbbf24}
+[data-theme="dark"] .tier.silver{background:#1f2937;color:#d1d5db}
+[data-theme="dark"] .tier.bronze{background:#3d1f08;color:#fb923c}
+
+/* TIMELINE */
+.timeline-card{
+    background:var(--card-bg);
+    border-radius:15px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--border);
+}
+.timeline{
+    position:relative;
+    padding-left:25px;
+}
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:8px;top:0;bottom:0;
+    width:2px;
+    background:var(--border);
+}
+.timeline-item{
+    position:relative;
+    padding-bottom:18px;
+}
+.timeline-item::before{
+    content:"";
+    position:absolute;
+    left:-21px;top:4px;
+    width:12px;height:12px;
+    border-radius:50%;
+    background:var(--lighter-green);
+    border:2px solid var(--border);
+}
+.timeline-item.completed::before{background:var(--green);border-color:var(--green)}
+.timeline-item.active::before{background:var(--warning);border-color:var(--warning);box-shadow:0 0 0 4px rgba(233,155,0,.2);animation:pulse 2s infinite}
+.timeline-item-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.timeline-item-meta{font-size:10px;color:var(--text-muted)}
+
+/* COMMAND PALETTE */
+.command-palette-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    backdrop-filter:blur(6px);
+    z-index:100;
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:15vh;
+}
+.command-palette-overlay.show{display:flex}
+.command-palette{
+    background:var(--card-bg);
+    border-radius:14px;
+    width:560px;
+    max-width:90vw;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+    overflow:hidden;
+    animation:slideDown .2s ease;
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.cp-search{
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.cp-search input{
+    flex:1;
+    border:none;
+    background:transparent;
+    font-size:15px;
+    color:var(--text);
+    font-family:inherit;
+    outline:none;
+}
+.cp-results{max-height:400px;overflow-y:auto}
+.cp-group{padding:8px}
+.cp-group-title{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    padding:8px 12px;
+    font-weight:700;
+}
+.cp-item{
+    padding:10px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    margin-bottom:2px;
+}
+.cp-item:hover,.cp-item.active{background:var(--light-green);color:var(--green)}
+.cp-item-icon{opacity:.7}
+.cp-item-meta{margin-left:auto;font-size:10px;color:var(--text-muted)}
+
+/* NOTIFICATIONS */
+.notif-drawer{
+    position:fixed;
+    top:0;right:-420px;
+    width:400px;
+    height:100vh;
+    background:var(--card-bg);
+    box-shadow:-10px 0 40px rgba(0,0,0,.15);
+    z-index:99;
+    transition:right .3s ease;
+    display:flex;
+    flex-direction:column;
+}
+.notif-drawer.show{right:0}
+.notif-header{
+    padding:22px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.notif-header h3{font-size:16px}
+.notif-close{
+    background:var(--lighter-green);
+    border:none;
+    width:30px;height:30px;
+    border-radius:50%;
+    cursor:pointer;
+    color:var(--text);
+}
+.notif-list{flex:1;overflow-y:auto;padding:14px}
+.notif{
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:var(--lighter-green);
+    border-left:3px solid var(--green);
+    cursor:pointer;
+    transition:.2s;
+}
+.notif:hover{transform:translateX(4px)}
+.notif.unread{background:var(--light-green);border-left-color:var(--accent)}
+.notif-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.notif-body{font-size:11px;color:var(--text-muted);line-height:1.4}
+.notif-time{font-size:10px;color:var(--text-muted);margin-top:6px}
+
+/* REPORT PANEL */
+.report-panel{display:none;margin-bottom:20px}
+.report-panel.show{display:block}
+.report-panel h2{font-size:20px;margin-bottom:5px}
+.report-panel p{color:var(--text-muted);font-size:12px;margin-bottom:20px}
+.report-actions{display:flex;gap:10px;flex-wrap:wrap}
+.action-btn{padding:10px 15px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:none}
+.primary{background:var(--green);color:white}
+.primary:hover{background:var(--dark-green)}
+.secondary{background:var(--light-green);color:var(--green)}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    bottom:30px;right:30px;
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    padding:14px 20px;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12px;
+    z-index:200;
+    animation:toastIn .3s ease;
+    border-left:4px solid var(--green);
+}
+.toast.error{border-left-color:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+    .sidebar{width:220px}
+    .main{margin-left:220px}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .report-grid{grid-template-columns:repeat(2,1fr)}
+    .two-col,.three-col,.split{grid-template-columns:1fr}
+}
+@media(max-width:750px){
+    .sidebar{position:relative;width:100%;height:auto}
+    .main{margin-left:0}
+    .header{padding:15px}
+    .content{padding:18px}
+    .kpis,.report-grid,.two-col,.three-col,.split{grid-template-columns:1fr}
+    .search-trigger span:not(kbd){display:none}
+}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--gray)}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="logo">SUPPLY<span>360</span></div>
+    <div class="logo-subtitle"><span class="live-dot"></span>LIVE • Intelligence Platform</div>
+
+    <div class="menu-title">Main</div>
+    <div class="nav-item active" onclick="showDashboard()">📊 Executive Dashboard</div>
+    <div class="nav-item" onclick="toggleMenu('supplyMenu')">🚚 Supply Chain & Logistics <span style="margin-left:auto">⌄</span></div>
+    <div id="supplyMenu" class="submenu">
+        <div class="sub-item" onclick="openReport('Supply Chain Operations')">Supply Chain Operations</div>
+        <div class="sub-item" onclick="toggleMenu('sourcingMenu')">Sourcing ▾</div>
+        <div id="sourcingMenu" class="submenu">
+            <div class="sub-item" onclick="openReport('IT Sourcing')">IT Sourcing</div>
+            <div class="sub-item" onclick="openReport('Technology Networks')">Technology Networks</div>
+            <div class="sub-item" onclick="openReport('Corporate Services')">Corporate Services</div>
+            <div class="sub-item" onclick="openReport('EBU & Subsidiaries')">EBU, Subsidiaries & Foundation</div>
+        </div>
+        <div class="sub-item" onclick="toggleMenu('logisticsMenu')">Logistics ▾</div>
+        <div id="logisticsMenu" class="submenu">
+            <div class="sub-item" onclick="openReport('Inbound Logistics')">Inbound</div>
+            <div class="sub-item" onclick="openReport('Outbound Logistics')">Outbound</div>
+        </div>
+    </div>
+    <div class="nav-item" onclick="openReport('Digital Transformation')">🤖 Digital Transformation</div>
+
+    <div class="menu-title">Analytics</div>
+    <div class="nav-item" onclick="openReport('Performance Reports')">📈 Performance Reports</div>
+    <div class="nav-item" onclick="openReport('Exception Management')">⚠️ Exceptions & Risks</div>
+    <div class="nav-item" onclick="openReport('Predictive Forecast')">🔮 Predictive Forecast</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<header class="header">
+    <div>
+        <div class="page-title" id="pageTitle">Executive Dashboard</div>
+        <div class="breadcrumb" id="breadcrumb">Home / Executive Dashboard</div>
+    </div>
+    <div class="header-right">
+        <div class="search-trigger" onclick="openCommandPalette()">
+            <span>🔍</span><span>Search or jump to...</span><kbd>Ctrl K</kbd>
+        </div>
+        <div class="date" id="liveClock">Tuesday, 18 August 2026</div>
+        <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle dark mode">🌙</button>
+        <button class="icon-btn" onclick="toggleNotifications()" title="Notifications">
+            🔔<span class="badge" id="notifBadge">4</span>
+        </button>
+        <div class="profile">GE</div>
+    </div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD VIEW -->
+<div id="dashboardView">
+    <div class="welcome">
+        <div>
+            <h1>Supply Chain Intelligence</h1>
+            <p>Real-time view of supply chain, sourcing, logistics and digital transformation performance.</p>
+        </div>
+        <div class="date-range" onclick="showToast('📅 Date range picker coming soon','info')">
+            📅 <span id="rangeLabel">YTD 2026</span> ▾
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+        <div class="kpi">
+            <div class="kpi-top">
+                <span>Spend Under Management</span>
+                <div class="kpi-icon">💰</div>
+            </div>
+            <div class="kpi-label">Current Performance</div>
+            <div class="kpi-value" data-counter="8420000000" data-prefix="KES " data-format="short">KES 0</div>
+            <div class="kpi-change">↑ 12.4% vs previous period</div>
+            <canvas class="kpi-sparkline" data-spark="[72,75,78,76,80,82,84]"></canvas>
+        </div>
+        <div class="kpi">
+            <div class="kpi-top">
+                <span>Cost Savings</span>
+                <div class="kpi-icon">📉</div>
+            </div>
+            <div class="kpi-label">YTD Savings</div>
+            <div class="kpi-value" data-counter="684000000" data-prefix="KES " data-format="short">KES 0</div>
+            <div class="kpi-change">↑ 8.7% improvement</div>
+            <canvas class="kpi-sparkline" data-spark="[45,52,58,60,64,66,68]"></canvas>
+        </div>
+        <div class="kpi">
+            <div class="kpi-top">
+                <span>Supplier Performance</span>
+                <div class="kpi-icon">🤝</div>
+            </div>
+            <div class="kpi-label">Overall Score</div>
+            <div class="kpi-value" data-counter="94.6" data-suffix="%" data-decimals="1">0%</div>
+            <div class="kpi-change">↑ 3.2% improvement</div>
+            <canvas class="kpi-sparkline" data-spark="[88,90,91,92,93,94,95]"></canvas>
+        </div>
+        <div class="kpi">
+            <div class="kpi-top">
+                <span>On-Time Delivery</span>
+                <div class="kpi-icon">🚚</div>
+            </div>
+            <div class="kpi-label">Logistics KPI</div>
+            <div class="kpi-value" data-counter="96.2" data-suffix="%" data-decimals="1">0%</div>
+            <div class="kpi-change">↑ 2.8% improvement</div>
+            <canvas class="kpi-sparkline" data-spark="[90,92,93,94,95,96,96]"></canvas>
+        </div>
+    </div>
+
+    <!-- AI INSIGHTS -->
+    <div class="section-title">
+        <h2>🧠 AI-Generated Insights</h2>
+        <span>Powered by predictive analytics engine</span>
+    </div>
+
+    <div class="insights-card">
+        <div class="insight-header">
+            <div class="insight-badge">AI ENGINE • LIVE</div>
+            <h3>Risk & Opportunity Alerts</h3>
+            <span style="margin-left:auto;font-size:10px;color:var(--text-muted)">Updated 2 min ago</span>
+        </div>
+
+        <div class="insight critical">
+            <div class="insight-head">
+                <strong>⚠️ Supplier Risk Detected: TechCorp Ltd</strong>
+                <span class="insight-time">12 min ago • Confidence 94%</span>
+            </div>
+            <div class="insight-body">On-time delivery dropped from 97% to 84% in last 14 days. Cash flow indicators suggest financial distress. Recommend diversifying sourcing from alternative suppliers in Nairobi hub.</div>
+            <span class="insight-action">View Details →</span>
+        </div>
+
+        <div class="insight warning">
+            <div class="insight-head">
+                <strong>📈 Opportunity: Bulk Procurement Savings</strong>
+                <span class="insight-time">1 hour ago • Confidence 87%</span>
+            </div>
+            <div class="insight-body">Consolidating Q4 IT hardware orders across 4 business units could yield KES 42M in savings through volume discounts. Window closes in 18 days.</div>
+            <span class="insight-action">Analyze Opportunity →</span>
+        </div>
+
+        <div class="insight info">
+            <div class="insight-head">
+                <strong>🔍 Pattern: Port Congestion Rising in Mombasa</strong>
+                <span class="insight-time">3 hours ago • Confidence 91%</span>
+            </div>
+            <div class="insight-body">Average dwell time increased 22% week-over-week. Suggest rerouting 3 shipments through Dar es Salaam to avoid 4-6 day delays.</div>
+            <span class="insight-action">View Shipments →</span>
+        </div>
+    </div>
+
+    <!-- QUICK REPORTS -->
+    <div class="section-title">
+        <h2>Quick Reports</h2>
+        <span>Click any area to view detailed analytics</span>
+    </div>
+
+    <div class="report-grid">
+        <div class="report-card" onclick="openReport('Supply Chain Operations')">
+            <span class="trend">+4.2%</span>
+            <div class="report-icon">⚙️</div>
+            <h3>Supply Chain Operations</h3>
+            <p>Operational performance, service levels, inventory and supply chain KPIs.</p>
+        </div>
+        <div class="report-card" onclick="openReport('Sourcing')">
+            <span class="trend">+2.1%</span>
+            <div class="report-icon">🎯</div>
+            <h3>Sourcing</h3>
+            <p>IT, Technology Networks, Corporate Services and EBU sourcing performance.</p>
+        </div>
+        <div class="report-card" onclick="openReport('Logistics')">
+            <span class="trend">+3.8%</span>
+            <div class="report-icon">🚛</div>
+            <h3>Logistics</h3>
+            <p>Inbound and outbound logistics, delivery performance and cost analytics.</p>
+        </div>
+        <div class="report-card" onclick="openReport('Digital Transformation')">
+            <span class="trend">+7.4%</span>
+            <div class="report-icon">🤖</div>
+            <h3>Digital Transformation</h3>
+            <p>Automation, systems adoption, digital initiatives and transformation KPIs.</p>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="section-title">
+        <h2>Performance Overview</h2>
+        <span>Year-to-date + forecast</span>
+    </div>
+
+    <div class="two-col">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Supply Chain Performance + Forecast</h3>
+                <select onchange="updateForecast(this.value)">
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <canvas id="performanceChart" height="110"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>Spend Distribution</h3>
+            </div>
+            <canvas id="spendChart" height="180"></canvas>
+        </div>
+    </div>
+
+    <!-- NETWORK MAP + TIMELINE -->
+    <div class="split">
+        <div class="network-map">
+            <h3>🌐 Global Shipment Network</h3>
+            <svg class="network-svg" id="networkSvg" viewBox="0 0 800 280" preserveAspectRatio="xMidYMid meet"></svg>
+            <div class="network-legend">
+                <div class="legend-item"><span class="legend-dot" style="background:#19a85a"></span> On-time</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#e99b00"></span> Delayed</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#dc3545"></span> At-risk</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#0ea5e9"></span> Hub</div>
+            </div>
+        </div>
+        <div class="timeline-card">
+            <h3 style="font-size:14px;margin-bottom:14px">🚚 Active Shipment: SH-2026-8841</h3>
+            <div class="timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-item-title">Order Placed</div>
+                    <div class="timeline-item-meta">Aug 10, 09:15 AM • Singapore</div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-item-title">Cleared Customs</div>
+                    <div class="timeline-item-meta">Aug 12, 02:30 PM • Dubai Hub</div>
+                </div>
+                <div class="timeline-item active">
+                    <div class="timeline-item-title">In Transit to Mombasa</div>
+                    <div class="timeline-item-meta">ETA: Aug 20, 11:00 AM • 67% complete</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-item-title">Final Mile Delivery</div>
+                    <div class="timeline-item-meta">ETA: Aug 22, 04:00 PM • Nairobi DC</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUPPLIER LEADERBOARD -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3>🏆 Supplier Leaderboard</h3>
+            <div class="table-controls">
+                <input type="text" class="table-search" id="supplierSearch" placeholder="Search suppliers..." oninput="filterSuppliers()">
+                <button class="filter-btn active" data-tier="all" onclick="filterByTier('all',this)">All</button>
+                <button class="filter-btn" data-tier="gold" onclick="filterByTier('gold',this)">Gold</button>
+                <button class="filter-btn" data-tier="silver" onclick="filterByTier('silver',this)">Silver</button>
+                <button class="filter-btn" data-tier="bronze" onclick="filterByTier('bronze',this)">Bronze</button>
+                <button class="download-btn" onclick="exportCSV('suppliers')">↓ Export CSV</button>
+            </div>
+        </div>
+        <table id="supplierTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('supplierTable',0)">Supplier <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('supplierTable',1)">Category <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('supplierTable',2)">Tier <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('supplierTable',3)">Performance <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('supplierTable',4)">On-Time % <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('supplierTable',5)">Spend (KES M) <span class="sort-indicator">↕</span></th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="supplierBody"></tbody>
+        </table>
+    </div>
+
+    <!-- LATEST REPORTS -->
+    <div class="table-card" style="margin-top:20px">
+        <div class="table-header">
+            <h3>Latest Performance Reports</h3>
+            <button class="download-btn" onclick="exportCSV('reports')">↓ Download Report</button>
+        </div>
+        <table id="reportsTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('reportsTable',0)">Business Area <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('reportsTable',1)">Performance <span class="sort-indicator">↕</span></th>
+                    <th onclick="sortTable('reportsTable',2)">Target <span class="sort-indicator">↕</span></th>
+                    <th>Variance</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Supply Chain Operations</td><td>95.4%</td><td>94%</td><td>+1.4%</td><td><span class="status good">ON TARGET</span></td><td>Today</td></tr>
+                <tr><td>IT Sourcing</td><td>91.8%</td><td>93%</td><td>-1.2%</td><td><span class="status warning">WATCH</span></td><td>Today</td></tr>
+                <tr><td>Technology Networks</td><td>97.1%</td><td>95%</td><td>+2.1%</td><td><span class="status good">EXCELLENT</span></td><td>Yesterday</td></tr>
+                <tr><td>Corporate Services</td><td>94.7%</td><td>93%</td><td>+1.7%</td><td><span class="status good">ON TARGET</span></td><td>Yesterday</td></tr>
+                <tr><td>Inbound Logistics</td><td>92.4%</td><td>95%</td><td>-2.6%</td><td><span class="status warning">WATCH</span></td><td>Today</td></tr>
+                <tr><td>Outbound Logistics</td><td>96.8%</td><td>95%</td><td>+1.8%</td><td><span class="status good">EXCELLENT</span></td><td>Today</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- REPORT VIEW -->
+<div id="reportView" style="display:none">
+    <div class="report-panel show">
+        <h2 id="reportTitle">Report</h2>
+        <p id="reportDescription">Detailed performance report.</p>
+        <div class="report-actions">
+            <button class="action-btn primary" onclick="exportCSV('reports')">↓ Download Report</button>
+            <button class="action-btn secondary" onclick="showDashboard()">← Back to Dashboard</button>
+        </div>
+    </div>
+    <div class="kpis">
+        <div class="kpi"><div class="kpi-label">Performance</div><div class="kpi-value">95.4%</div><div class="kpi-change">↑ 4.2%</div></div>
+        <div class="kpi"><div class="kpi-label">Target</div><div class="kpi-value">94%</div><div class="kpi-change">Above target</div></div>
+        <div class="kpi"><div class="kpi-label">Open Issues</div><div class="kpi-value">12</div><div class="kpi-change">↓ 6 this month</div></div>
+        <div class="kpi"><div class="kpi-label">Achievement</div><div class="kpi-value">98%</div><div class="kpi-change">Strong performance</div></div>
+    </div>
+    <div class="two-col">
+        <div class="chart-card">
+            <div class="chart-header"><h3>Monthly Performance</h3></div>
+            <canvas id="reportChart" height="110"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-header"><h3>Performance Breakdown</h3></div>
+            <canvas id="breakdownChart" height="180"></canvas>
+        </div>
+    </div>
+    <div class="table-card">
+        <div class="table-header"><h3>Detailed Report</h3></div>
+        <table>
+            <thead>
+                <tr><th>Metric</th><th>Actual</th><th>Target</th><th>Variance</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Service Level</td><td>96.5%</td><td>95%</td><td>+1.5%</td><td><span class="status good">GOOD</span></td></tr>
+                <tr><td>Cost Efficiency</td><td>92.8%</td><td>90%</td><td>+2.8%</td><td><span class="status good">GOOD</span></td></tr>
+                <tr><td>Process Compliance</td><td>94.2%</td><td>95%</td><td>-0.8%</td><td><span class="status warning">WATCH</span></td></tr>
+                <tr><td>Cycle Time</td><td>87%</td><td>92%</td><td>-5%</td><td><span class="status bad">ACTION</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</main>
+
+<!-- COMMAND PALETTE -->
+<div class="command-palette-overlay" id="cpOverlay" onclick="if(event.target===this)closeCommandPalette()">
+    <div class="command-palette">
+        <div class="cp-search">
+            <span>🔍</span>
+            <input type="text" id="cpInput" placeholder="Type to search reports, actions, metrics..." oninput="filterCP()" autocomplete="off">
+            <kbd style="font-size:10px;background:var(--light-green);padding:3px 8px;border-radius:4px">ESC</kbd>
+        </div>
+        <div class="cp-results" id="cpResults"></div>
+    </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="notif-drawer" id="notifDrawer">
+    <div class="notif-header">
+        <h3>🔔 Notifications</h3>
+        <button class="notif-close" onclick="toggleNotifications()">×</button>
+    </div>
+    <div class="notif-list" id="notifList"></div>
+</div>
+
+<script>
+/* ============ THEME ============ */
+function toggleTheme(){
+    const html=document.documentElement;
+    const current=html.getAttribute('data-theme');
+    const next=current==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    document.getElementById('themeBtn').textContent=next==='dark'?'☀️':'🌙';
+    localStorage.setItem('supply360-theme',next);
+    rebuildCharts();
+}
+(function(){
+    const saved=localStorage.getItem('supply360-theme');
+    if(saved){
+        document.documentElement.setAttribute('data-theme',saved);
+        if(saved==='dark')document.getElementById('themeBtn').textContent='☀️';
+    }
+})();
+
+/* ============ LIVE CLOCK ============ */
+function updateClock(){
+    const now=new Date();
+    const opts={weekday:'long',year:'numeric',month:'long',day:'numeric'};
+    const date=now.toLocaleDateString('en-GB',opts);
+    const time=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('liveClock').textContent=date+' • '+time;
+}
+setInterval(updateClock,1000);updateClock();
+
+/* ============ MENUS ============ */
+function toggleMenu(id){document.getElementById(id).classList.toggle("show")}
+function showDashboard(){
+    document.getElementById("dashboardView").style.display="block";
+    document.getElementById("reportView").style.display="none";
+    document.getElementById("pageTitle").innerText="Executive Dashboard";
+    document.getElementById("breadcrumb").innerText="Home / Executive Dashboard";
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.querySelector('.nav-item').classList.add('active');
+}
+function openReport(name){
+    document.getElementById("dashboardView").style.display="none";
+    document.getElementById("reportView").style.display="block";
+    document.getElementById("reportTitle").innerText=name+" Report";
+    document.getElementById("breadcrumb").innerText="Home / Reports / "+name;
+    document.getElementById("pageTitle").innerText=name;
+    document.getElementById("reportDescription").innerText="Executive performance analytics and key performance indicators for "+name+".";
+    createReportCharts();
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============ ANIMATED COUNTERS ============ */
+function animateCounters(){
+    document.querySelectorAll('[data-counter]').forEach(el=>{
+        const target=parseFloat(el.dataset.counter);
+        const prefix=el.dataset.prefix||'';
+        const suffix=el.dataset.suffix||'';
+        const decimals=parseInt(el.dataset.decimals)||0;
+        const format=el.dataset.format;
+        const duration=1500;
+        const start=performance.now();
+        function step(ts){
+            const p=Math.min((ts-start)/duration,1);
+            const eased=1-Math.pow(1-p,3);
+            const val=target*eased;
+            let text;
+            if(format==='short'){
+                if(val>=1e9)text=prefix+(val/1e9).toFixed(2)+'B';
+                else if(val>=1e6)text=prefix+(val/1e6).toFixed(1)+'M';
+                else if(val>=1e3)text=prefix+(val/1e3).toFixed(1)+'K';
+                else text=prefix+Math.round(val);
+            }else{
+                text=prefix+val.toFixed(decimals)+suffix;
+            }
+            el.textContent=text;
+            if(p<1)requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    });
+}
+
+/* ============ SPARKLINES ============ */
+function drawSparklines(){
+    document.querySelectorAll('[data-spark]').forEach(canvas=>{
+        const data=JSON.parse(canvas.dataset.spark);
+        const ctx=canvas.getContext('2d');
+        const w=canvas.width=canvas.offsetWidth*2;
+        const h=canvas.height=canvas.offsetHeight*2;
+        ctx.scale(1,1);
+        const max=Math.max(...data),min=Math.min(...data);
+        const stepX=w/(data.length-1);
+        ctx.strokeStyle='#19a85a';
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        data.forEach((v,i)=>{
+            const x=i*stepX;
+            const y=h-((v-min)/(max-min||1))*h*.8-h*.1;
+            if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+        });
+        ctx.stroke();
+    });
+}
+
+/* ============ CHARTS ============ */
+let performanceChart,spendChart,reportChart,breakdownChart;
+
+function chartColors(){
+    const theme=document.documentElement.getAttribute('data-theme');
+    return{
+        grid:theme==='dark'?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)',
+        text:theme==='dark'?'#94a3b8':'#64748b',
+        accent:'#19a85a',
+        accentLight:'rgba(25,168,90,.15)',
+        forecast:'rgba(14,165,233,.5)',
+        forecastBand:'rgba(14,165,233,.1)'
+    };
+}
+
+function buildPerformanceChart(){
+    const ctx=document.getElementById('performanceChart');
+    if(!ctx)return;
+    if(performanceChart)performanceChart.destroy();
+    const c=chartColors();
+    const labels=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const actual=[88,90,91,89,93,94,96,95,null,null,null,null];
+    const forecast=[null,null,null,null,null,null,null,95,96,97,98,98];
+    const upper=[null,null,null,null,null,null,null,97,98,99,99,99];
+    const lower=[null,null,null,null,null,null,null,93,94,95,96,96];
+    performanceChart=new Chart(ctx,{
+        type:'line',
+        data:{labels,datasets:[
+            {label:'Actual',data:actual,borderColor:c.accent,backgroundColor:c.accentLight,borderWidth:3,tension:.4,fill:false,pointRadius:4,pointBackgroundColor:c.accent},
+            {label:'Forecast',data:forecast,borderColor:c.forecast,borderWidth:2,borderDash:[6,4],tension:.4,fill:false,pointRadius:3},
+            {label:'Upper Bound',data:upper,borderColor:'transparent',backgroundColor:c.forecastBand,tension:.4,fill:'+1',pointRadius:0},
+            {label:'Lower Bound',data:lower,borderColor:'transparent',backgroundColor:c.forecastBand,tension:.4,pointRadius:0}
+        ]},
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{position:'bottom',labels:{color:c.text,font:{size:10},usePointStyle:true,pointStyle:'circle'}}},
+            scales:{
+                y:{min:70,max:100,grid:{color:c.grid},ticks:{color:c.text}},
+                x:{grid:{display:false},ticks:{color:c.text}}
             }
         }
-    </script>
-    
-    <style>
-        * {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+    });
+}
+
+function buildSpendChart(){
+    const ctx=document.getElementById('spendChart');
+    if(!ctx)return;
+    if(spendChart)spendChart.destroy();
+    const c=chartColors();
+    spendChart=new Chart(ctx,{
+        type:'doughnut',
+        data:{
+            labels:['IT Sourcing','Technology Networks','Corporate Services','EBU & Subsidiaries','Logistics'],
+            datasets:[{data:[22,31,18,12,17],backgroundColor:['#19a85a','#087f3f','#22c55e','#14b8a6','#0ea5e9'],borderWidth:0}]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,cutout:'65%',
+            plugins:{legend:{position:'bottom',labels:{color:c.text,font:{size:10},padding:10,usePointStyle:true,pointStyle:'circle'}}}
         }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0a0a;
-            color: #f5f5f0;
-            overflow-x: hidden;
+    });
+}
+
+function rebuildCharts(){
+    buildPerformanceChart();
+    buildSpendChart();
+    if(document.getElementById('reportView').style.display==='block')createReportCharts();
+}
+
+function updateForecast(year){showToast('📊 Loaded forecast for '+year,'info')}
+
+function createReportCharts(){
+    const c=chartColors();
+    if(reportChart)reportChart.destroy();
+    if(breakdownChart)breakdownChart.destroy();
+    reportChart=new Chart(document.getElementById('reportChart'),{
+        type:'bar',
+        data:{
+            labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],
+            datasets:[{label:'Performance',data:[89,91,90,94,93,95,97,95],backgroundColor:c.accent,borderRadius:6,borderSkipped:false}]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false}},
+            scales:{y:{min:70,max:100,grid:{color:c.grid},ticks:{color:c.text}},x:{grid:{display:false},ticks:{color:c.text}}}
         }
-        
-        .glass {
-            background: rgba(20,20,22,0.55);
-            backdrop-filter: blur(20px) saturate(140%);
-            border: 1px solid rgba(255,255,255,0.06);
+    });
+    breakdownChart=new Chart(document.getElementById('breakdownChart'),{
+        type:'doughnut',
+        data:{
+            labels:['Efficiency','Quality','Compliance','Service'],
+            datasets:[{data:[92,96,94,97],backgroundColor:['#19a85a','#22c55e','#14b8a6','#0ea5e9'],borderWidth:0}]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,cutout:'65%',
+            plugins:{legend:{position:'bottom',labels:{color:c.text,font:{size:10},usePointStyle:true,pointStyle:'circle'}}}
         }
-        
-        .text-gold-gradient {
-            background: linear-gradient(135deg, #f5e9c2 0%, #d4af37 40%, #c9a961 70%, #a8873a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .bg-grid-pattern {
-            background-image: 
-                linear-gradient(rgba(201,169,97,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(201,169,97,0.06) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        
-        .bg-radial-gold {
-            background: radial-gradient(circle at 50% 0%, rgba(201,169,97,0.15), transparent 60%);
-        }
-        
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: #22c55e;
-            box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
-            animation: livePulse 1.8s ease-out infinite;
-        }
-        
-        @keyframes livePulse {
-            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
-            70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
-            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
-        }
-        
-        .shadow-glow {
-            box-shadow: 0 0 40px -10px rgba(201, 169, 97, 0.35);
-        }
-        
-        .card-lift {
-            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
-        }
-        
-        .card-lift:hover {
-            transform: translateY(-2px);
-            border-color: rgba(201,169,97,0.3);
-            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,169,97,0.15);
-        }
-        
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(201,169,97,0.18);
-            border-radius: 10px;
-            border: 2px solid transparent;
-            background-clip: padding-box;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(201,169,97,0.35);
-            background-clip: padding-box;
-            border: 2px solid transparent;
-        }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { scrollbar-width: none; }
-    </style>
-</head>
-<body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
-        const { motion, AnimatePresence } = window.Motion || window.FramerMotion || {};
-        
-        // ============ DATA ============
-        const EVENT = {
-            name: 'AFRICA BUSINESS SUMMIT 2026',
-            tagline: "Where Africa's Business Leaders Meet the Future.",
-            city: 'Nairobi',
-            country: 'Kenya',
-            venue: 'Kenyatta International Convention Centre (KICC)',
-            dates: 'October 14–16, 2026',
-            startDate: new Date('2026-10-14T09:00:00+03:00'),
-            attendees: 2847,
-            speakers: 86,
-            sponsors: 42,
-            sessions: 18,
-            engagement: 94,
+    });
+}
+
+/* ============ NETWORK MAP ============ */
+function buildNetwork(){
+    const svg=document.getElementById('networkSvg');
+    const hubs=[
+        {x:120,y:80,name:'Singapore',color:'#0ea5e9'},
+        {x:280,y:60,name:'Dubai',color:'#0ea5e9'},
+        {x:430,y:90,name:'Mombasa',color:'#0ea5e9'},
+        {x:600,y:70,name:'Rotterdam',color:'#0ea5e9'},
+        {x:730,y:150,name:'LA',color:'#0ea5e9'},
+        {x:180,y:210,name:'Shanghai',color:'#0ea5e9'},
+        {x:530,y:220,name:'Nairobi',color:'#0ea5e9'}
+    ];
+    const routes=[
+        {from:0,to:1,status:'good'},{from:1,to:2,status:'delayed'},
+        {from:2,to:6,status:'good'},{from:3,to:1,status:'good'},
+        {from:4,to:3,status:'at-risk'},{from:5,to:0,status:'good'},
+        {from:6,to:3,status:'good'}
+    ];
+    const statusColors={good:'#19a85a',delayed:'#e99b00','at-risk':'#dc3545'};
+    let html='';
+    // routes
+    routes.forEach((r,i)=>{
+        const a=hubs[r.from],b=hubs[r.to];
+        html+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${statusColors[r.status]}" stroke-width="1.5" stroke-dasharray="3,3" opacity=".5"/>`;
+        html+=`<circle r="4" fill="${statusColors[r.status]}"><animateMotion dur="${4+i*.5}s" repeatCount="indefinite" path="M ${a.x},${a.y} L ${b.x},${b.y}"/></circle>`;
+    });
+    // hubs
+    hubs.forEach(h=>{
+        html+=`<circle cx="${h.x}" cy="${h.y}" r="10" fill="${h.color}" opacity=".15"/>`;
+        html+=`<circle cx="${h.x}" cy="${h.y}" r="5" fill="${h.color}"/>`;
+        html+=`<text x="${h.x}" y="${h.y+22}" text-anchor="middle" font-size="10" font-weight="600" fill="currentColor">${h.name}</text>`;
+    });
+    svg.innerHTML=html;
+}
+
+/* ============ SUPPLIER DATA ============ */
+const suppliers=[
+    {name:'TechCorp Ltd',cat:'IT Hardware',tier:'gold',perf:96.4,otd:97.2,spend:284,status:'good'},
+    {name:'Global Logistics Inc',cat:'Transportation',tier:'gold',perf:95.8,otd:96.8,spend:412,status:'good'},
+    {name:'NetWorks Pro',cat:'Technology Networks',tier:'silver',perf:92.1,otd:91.4,spend:156,status:'warning'},
+    {name:'OfficeMax Solutions',cat:'Corporate Services',tier:'gold',perf:97.3,otd:98.1,spend:89,status:'good'},
+    {name:'DataSync Systems',cat:'IT Software',tier:'silver',perf:89.4,otd:88.6,spend:201,status:'warning'},
+    {name:'Prime Freight Co',cat:'Transportation',tier:'bronze',perf:84.2,otd:82.1,spend:320,status:'bad'},
+    {name:'CloudServe Ltd',cat:'IT Services',tier:'gold',perf:98.1,otd:98.7,spend:178,status:'good'},
+    {name:'Metro Shipping',cat:'Logistics',tier:'silver',perf:91.7,otd:90.2,spend:245,status:'warning'},
+    {name:'SecureTech',cat:'Security Systems',tier:'gold',perf:95.9,otd:96.4,spend:134,status:'good'},
+    {name:'Green Energy Supplies',cat:'Utilities',tier:'silver',perf:93.2,otd:94.1,spend:98,status:'good'}
+];
+
+let supplierFilter={tier:'all',search:''};
+
+function renderSuppliers(){
+    const body=document.getElementById('supplierBody');
+    let data=suppliers.filter(s=>{
+        if(supplierFilter.tier!=='all'&&s.tier!==supplierFilter.tier)return false;
+        if(supplierFilter.search&&!s.name.toLowerCase().includes(supplierFilter.search.toLowerCase())&&!s.cat.toLowerCase().includes(supplierFilter.search.toLowerCase()))return false;
+        return true;
+    });
+    body.innerHTML=data.map(s=>{
+        const statusText=s.status==='good'?'EXCELLENT':s.status==='warning'?'WATCH':'AT RISK';
+        return `<tr>
+            <td><strong>${s.name}</strong></td>
+            <td>${s.cat}</td>
+            <td><span class="tier-badge ${s.tier}">${s.tier.toUpperCase()}</span></td>
+            <td><strong>${s.perf}%</strong></td>
+            <td>${s.otd}%</td>
+            <td>KES ${s.spend}M</td>
+            <td><span class="status ${s.status}">${statusText}</span></td>
+        </tr>`;
+    }).join('')||'<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">No suppliers match your filters</td></tr>';
+}
+
+function filterSuppliers(){
+    supplierFilter.search=document.getElementById('supplierSearch').value;
+    renderSuppliers();
+}
+
+function filterByTier(tier,btn){
+    supplierFilter.tier=tier;
+    document.querySelectorAll('[data-tier]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderSuppliers();
+}
+
+/* ============ TABLE SORT ============ */
+const sortState={};
+function sortTable(tableId,colIdx){
+    const table=document.getElementById(tableId);
+    const tbody=table.querySelector('tbody');
+    const rows=Array.from(tbody.querySelectorAll('tr'));
+    const key=tableId+'-'+colIdx;
+    sortState[key]=sortState[key]==='asc'?'desc':'asc';
+    const dir=sortState[key]==='asc'?1:-1;
+    rows.sort((a,b)=>{
+        let av=a.cells[colIdx].innerText.trim();
+        let bv=b.cells[colIdx].innerText.trim();
+        const an=parseFloat(av.replace(/[^0-9.-]/g,''));
+        const bn=parseFloat(bv.replace(/[^0-9.-]/g,''));
+        if(!isNaN(an)&&!isNaN(bn))return(an-bn)*dir;
+        return av.localeCompare(bv)*dir;
+    });
+    rows.forEach(r=>tbody.appendChild(r));
+}
+
+/* ============ CSV EXPORT ============ */
+function exportCSV(type){
+    let csv='';
+    let filename='';
+    if(type==='suppliers'){
+        csv='Supplier,Category,Tier,Performance %,On-Time %,Spend (KES M),Status\n';
+        suppliers.forEach(s=>{
+            csv+=`"${s.name}","${s.cat}","${s.tier}",${s.perf},${s.otd},${s.spend},${s.status}\n`;
+        });
+        filename='suppliers-'+Date.now()+'.csv';
+    }else{
+        const rows=document.querySelectorAll('#reportsTable tr');
+        rows.forEach(r=>{
+            const cells=Array.from(r.querySelectorAll('th,td')).map(c=>'"'+c.innerText.replace(/"/g,'""')+'"');
+            csv+=cells.join(',')+'\n';
+        });
+        filename='performance-report-'+Date.now()+'.csv';
+    }
+    const blob=new Blob([csv],{type:'text/csv'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=filename;a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ '+filename+' downloaded successfully','success');
+}
+
+/* ============ COMMAND PALETTE ============ */
+const cpItems=[
+    {group:'Reports',items:[
+        {icon:'📊',label:'Executive Dashboard',meta:'Ctrl+1',action:()=>showDashboard()},
+        {icon:'⚙️',label:'Supply Chain Operations',meta:'Report',action:()=>openReport('Supply Chain Operations')},
+        {icon:'🎯',label:'Sourcing Report',meta:'Report',action:()=>openReport('Sourcing')},
+        {icon:'🚛',label:'Logistics Report',meta:'Report',action:()=>openReport('Logistics')},
+        {icon:'🤖',label:'Digital Transformation',meta:'Report',action:()=>openReport('Digital Transformation')},
+        {icon:'🔮',label:'Predictive Forecast',meta:'Report',action:()=>openReport('Predictive Forecast')}
+    ]},
+    {group:'Actions',items:[
+        {icon:'🌙',label:'Toggle Dark Mode',meta:'Theme',action:toggleTheme},
+        {icon:'📥',label:'Export Suppliers to CSV',meta:'Export',action:()=>exportCSV('suppliers')},
+        {icon:'📥',label:'Export Performance Report',meta:'Export',action:()=>exportCSV('reports')},
+        {icon:'🔔',label:'Open Notifications',meta:'Drawer',action:toggleNotifications}
+    ]},
+    {group:'Metrics',items:[
+        {icon:'💰',label:'Spend Under Management',meta:'KES 8.42B',action:()=>showToast('Spend analytics loading...','info')},
+        {icon:'📉',label:'Cost Savings YTD',meta:'KES 684M',action:()=>showToast('Savings breakdown loading...','info')},
+        {icon:'🤝',label:'Supplier Performance',meta:'94.6%',action:()=>showToast('Supplier details loading...','info')}
+    ]}
+];
+
+let cpActiveIndex=0;
+
+function renderCP(filter=''){
+    const res=document.getElementById('cpResults');
+    const f=filter.toLowerCase();
+    let html='';
+    let idx=0;
+    cpItems.forEach(g=>{
+        const filtered=g.items.filter(i=>!f||i.label.toLowerCase().includes(f)||i.group.toLowerCase().includes(f));
+        if(!filtered.length)return;
+        html+=`<div class="cp-group"><div class="cp-group-title">${g.group}</div>`;
+        filtered.forEach(i=>{
+            html+=`<div class="cp-item ${idx===cpActiveIndex?'active':''}" onclick="(${i.action.toString()})()" data-idx="${idx}">
+                <span class="cp-item-icon">${i.icon}</span>
+                <span>${i.label}</span>
+                <span class="cp-item-meta">${i.meta||''}</span>
+            </div>`;
+            idx++;
+        });
+        html+='</div>';
+    });
+    if(!html)html='<div class="cp-group"><div class="cp-group-title" style="text-align:center">No results found</div></div>';
+    res.innerHTML=html;
+    document.querySelectorAll('.cp-item').forEach(el=>{
+        el.onmouseenter=()=>{
+            cpActiveIndex=parseInt(el.dataset.idx);
+            document.querySelectorAll('.cp-item').forEach(x=>x.classList.remove('active'));
+            el.classList.add('active');
         };
-        
-        const CURRENT_USER = {
-            id: 'ABS26-004821',
-            name: 'Graham Esonga',
-            firstName: 'Graham',
-            title: 'Chief Strategy Officer',
-            company: 'African Growth Partners',
-            country: 'Kenya',
-            industry: 'Investment',
-            pass: 'EXECUTIVE',
-            interests: ['AI','Investment','Sustainability'],
-            points: 1020,
-            connections: 5,
-            sessionsSaved: 5,
-            checkedIn: true,
-        };
-        
-        const SPEAKERS = [
-            { id:'sp1', name:'Dr. Amara Okafor', title:'AI Research Lead', org:'Savannah AI Labs', country:'Nigeria', bio:'Pioneer in applied AI for African markets.', sessions:['s3','s7'], status:'CONFIRMED' },
-            { id:'sp2', name:'Prof. Kwame Asante', title:'Dean, Business School', org:'University of Ghana', country:'Ghana', bio:'Economist focused on continental trade integration.', sessions:['s2','s11'], status:'CONFIRMED' },
-            { id:'sp3', name:'Nadia El-Sayed', title:'Managing Partner', org:'Cairo Capital', country:'Egypt', bio:'Leads a $1.2B fund investing in pan-African technology.', sessions:['s5','s10'], status:'CONFIRMED' },
-            { id:'sp4', name:'Jabari Muthoni', title:'CEO', org:'Nairobi FinTech Labs', country:'Kenya', bio:'Built three unicorn fintechs across East Africa.', sessions:['s4','s12'], status:'CHECKED IN' },
-        ];
-        
-        const ROOMS = [
-            { id:'r1', name:'Main Stage', capacity: 1200, icon:'🎤' },
-            { id:'r2', name:'Room A — Savannah', capacity: 300, icon:'🏜️' },
-            { id:'r3', name:'Room B — Rift', capacity: 250, icon:'🏞️' },
-            { id:'r4', name:'Room C — Victoria', capacity: 180, icon:'🌊' },
-            { id:'r5', name:'Networking Lounge', capacity: 400, icon:'🤝' },
-        ];
-        
-        const SESSIONS = [
-            { id:'s1', day:1, title:'Opening Ceremony', track:'Plenary', time:'09:00', end:'10:00', room:'r1', speaker:'sp2', type:'Keynote', attendees: 1120, live:true, description:'Official welcome to Africa Business Summit 2026.' },
-            { id:'s2', day:1, title:'Africa Economic Outlook 2027', track:'Macro', time:'10:30', end:'11:45', room:'r1', speaker:'sp2', type:'Panel', attendees: 980, live:false, description:'Leading economists forecast the next chapter of African growth.' },
-            { id:'s3', day:1, title:'AI & The Future of African Business', track:'Technology', time:'12:00', end:'13:15', room:'r1', speaker:'sp1', type:'Keynote', attendees: 1085, live:true, description:'How artificial intelligence is reshaping industries across the continent.' },
-            { id:'s4', day:1, title:'CEO Leadership Forum', track:'Leadership', time:'14:30', end:'16:00', room:'r2', speaker:'sp4', type:'Fireside', attendees: 285, live:false, description:'Intimate conversation with Africa\'s most influential CEOs.' },
-            { id:'s5', day:1, title:'Investment Opportunities in Africa', track:'Capital', time:'14:30', end:'16:00', room:'r3', speaker:'sp3', type:'Panel', attendees: 230, live:false, description:'Where smart money is going — and where it should go next.' },
-        ];
-        
-        const POLLS = [
-            {
-                id:'p1',
-                question:'What will have the biggest impact on African businesses over the next 5 years?',
-                options:[
-                    { label:'AI', votes: 917 },
-                    { label:'FinTech', votes: 590 },
-                    { label:'Digital Infrastructure', votes: 350 },
-                    { label:'Manufacturing', votes: 196 },
-                    { label:'Climate Technology', votes: 131 },
-                ],
-                total: 2184,
-            },
-        ];
-        
-        const QUESTIONS = [
-            { id:'q1', session:'s3', author:'Sarah Mwangi', text:'Will AI eliminate more jobs than it creates?', votes: 142, time:'12:18', pinned:true },
-            { id:'q2', session:'s3', author:'David Kamau', text:'Which African markets should investors watch?', votes: 98, time:'12:24', pinned:false },
-            { id:'q3', session:'s3', author:'Amina Yusuf', text:'How do we ensure AI benefits reach rural communities?', votes: 87, time:'12:31', pinned:false },
-        ];
-        
-        const NOTIFICATIONS = [
-            { id:'a1', title:'Main Hall session starts soon', message:'AI & The Future of African Business begins in 10 minutes.', time:'08:52', priority:'high', read:false },
-            { id:'a2', title:'Connection accepted', message:'Sarah Mwangi accepted your connection request.', time:'08:41', priority:'normal', read:false },
-            { id:'a3', title:'New speaker question', message:'A new question was posted for Dr. Amara Okafor\'s session.', time:'08:22', priority:'normal', read:false },
-        ];
-        
-        const AI_RESPONSES = {
-            sessions_today: "Based on your interests, I recommend:\n\n1. **AI & The Future of African Business** — Main Stage, 12:00 PM\n2. **Investment Opportunities in Africa** — Room B, 2:30 PM\n\nI've saved these to your schedule.",
-            investors: "I found **14 investors** attending. Top matches:\n\n• **Nadia El-Sayed** — Cairo Capital\n• **Samuel Wafula** — Equator Ventures\n\nWant me to request introductions?",
-            default: "I'm analyzing the event data. What can I help you with?",
-        };
-        
-        // ============ COMPONENTS ============
-        
-        function Counter({ to, duration = 1400 }) {
-            const [val, setVal] = useState(0);
-            useEffect(() => {
-                let start = null;
-                const step = (ts) => {
-                    if (!start) start = ts;
-                    const p = Math.min((ts - start) / duration, 1);
-                    const eased = 1 - Math.pow(1 - p, 3);
-                    setVal(Math.floor(to * eased));
-                    if (p < 1) requestAnimationFrame(step);
-                };
-                requestAnimationFrame(step);
-            }, [to, duration]);
-            return <span>{val.toLocaleString()}</span>;
+    });
+}
+
+function openCommandPalette(){
+    document.getElementById('cpOverlay').classList.add('show');
+    document.getElementById('cpInput').focus();
+    cpActiveIndex=0;
+    renderCP();
+}
+function closeCommandPalette(){document.getElementById('cpOverlay').classList.remove('show')}
+function filterCP(){
+    const v=document.getElementById('cpInput').value;
+    cpActiveIndex=0;
+    renderCP(v);
+}
+
+/* ============ NOTIFICATIONS ============ */
+const notifications=[
+    {title:'Critical: TechCorp delivery issues',body:'On-time delivery dropped to 84%. Immediate review recommended.',time:'12 min ago',unread:true},
+    {title:'New shipment arrived',body:'SH-2026-8839 cleared customs at Mombasa port.',time:'1 hour ago',unread:true},
+    {title:'Weekly report ready',body:'Your performance report for week 33 is ready for review.',time:'3 hours ago',unread:true},
+    {title:'Cost savings milestone',body:'You\'ve exceeded KES 650M in YTD savings. Great work!',time:'Yesterday',unread:true},
+    {title:'System maintenance',body:'Scheduled maintenance Sunday 2-4 AM EAT.',time:'2 days ago',unread:false}
+];
+
+function renderNotifs(){
+    const list=document.getElementById('notifList');
+    list.innerHTML=notifications.map(n=>`
+        <div class="notif ${n.unread?'unread':''}" onclick="this.classList.remove('unread');updateNotifBadge()">
+            <div class="notif-title">${n.title}</div>
+            <div class="notif-body">${n.body}</div>
+            <div class="notif-time">${n.time}</div>
+        </div>
+    `).join('');
+}
+
+function toggleNotifications(){
+    document.getElementById('notifDrawer').classList.toggle('show');
+}
+
+function updateNotifBadge(){
+    const count=document.querySelectorAll('.notif.unread').length;
+    const badge=document.getElementById('notifBadge');
+    badge.textContent=count;
+    badge.style.display=count?'block':'none';
+}
+
+/* ============ TOAST ============ */
+function showToast(msg,type='success'){
+    const t=document.createElement('div');
+    t.className='toast'+(type==='error'?' error':'');
+    t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s'},2500);
+    setTimeout(()=>t.remove(),2800);
+}
+
+/* ============ KEYBOARD SHORTCUTS ============ */
+document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
+        e.preventDefault();
+        const open=document.getElementById('cpOverlay').classList.contains('show');
+        if(open)closeCommandPalette();else openCommandPalette();
+    }
+    if(e.key==='Escape'){
+        closeCommandPalette();
+        document.getElementById('notifDrawer').classList.remove('show');
+    }
+    if(document.getElementById('cpOverlay').classList.contains('show')){
+        const items=document.querySelectorAll('.cp-item');
+        if(e.key==='ArrowDown'){
+            e.preventDefault();
+            cpActiveIndex=Math.min(cpActiveIndex+1,items.length-1);
+            items.forEach(i=>i.classList.remove('active'));
+            items[cpActiveIndex]?.classList.add('active');
+            items[cpActiveIndex]?.scrollIntoView({block:'nearest'});
+        }else if(e.key==='ArrowUp'){
+            e.preventDefault();
+            cpActiveIndex=Math.max(cpActiveIndex-1,0);
+            items.forEach(i=>i.classList.remove('active'));
+            items[cpActiveIndex]?.classList.add('active');
+            items[cpActiveIndex]?.scrollIntoView({block:'nearest'});
+        }else if(e.key==='Enter'){
+            e.preventDefault();
+            items[cpActiveIndex]?.click();
         }
-        
-        function Badge({ children, tone = 'default', dot }) {
-            const tones = {
-                default: 'bg-white/5 text-white/70 border-white/10',
-                gold: 'bg-champagne-400/10 text-champagne-300 border-champagne-400/20',
-                green: 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20',
-                red: 'bg-rose-400/10 text-rose-300 border-rose-400/20',
-            };
-            return (
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${tones[tone]}`}>
-                    {dot && <span className={`w-1.5 h-1.5 rounded-full ${tone === 'green' ? 'bg-emerald-400' : tone === 'red' ? 'bg-rose-400' : 'bg-white/50'}`} />}
-                    {children}
-                </span>
-            );
-        }
-        
-        function Button({ children, variant = 'primary', size = 'md', className = '', ...props }) {
-            const base = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 rounded-xl';
-            const sizes = { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2.5 text-sm', lg: 'px-6 py-3.5 text-base' };
-            const variants = {
-                primary: 'bg-gradient-to-b from-champagne-300 to-champagne-500 text-ink-900 hover:from-champagne-200 hover:to-champagne-400 shadow-glow',
-                ghost: 'bg-white/5 text-white/80 border border-white/10 hover:bg-white/10',
-                outline: 'border border-champagne-400/30 text-champagne-300 hover:bg-champagne-400/10',
-            };
-            return <button className={`${base} ${sizes[size]} ${variants[variant]} ${className}`} {...props}>{children}</button>;
-        }
-        
-        function Card({ children, className = '' }) {
-            return <div className={`glass rounded-2xl border border-white/5 card-lift ${className}`}>{children}</div>;
-        }
-        
-        function Progress({ value, tone = 'gold' }) {
-            const tones = {
-                gold: 'from-champagne-300 to-champagne-500',
-                green: 'from-emerald-400 to-emerald-600',
-            };
-            return (
-                <div className="w-full">
-                    <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
-                        <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${value}%` }}
-                            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                            className={`h-full rounded-full bg-gradient-to-r ${tones[tone]}`}
-                        />
-                    </div>
-                </div>
-            );
-        }
-        
-        function Avatar({ name, size = 40 }) {
-            const initials = name ? name.split(' ').map(p => p[0]).slice(0,2).join('') : '?';
-            return (
-                <div className="rounded-full bg-champagne-500/20 text-champagne-300 flex items-center justify-center font-semibold flex-shrink-0" style={{ width: size, height: size, fontSize: size * 0.38 }}>
-                    {initials}
-                </div>
-            );
-        }
-        
-        // ============ LANDING ============
-        
-        function Landing({ onEnter }) {
-            const [time, setTime] = useState({});
-            useEffect(() => {
-                const update = () => {
-                    const diff = EVENT.startDate - new Date();
-                    if (diff <= 0) return setTime({ d:0, h:0, m:0, s:0 });
-                    setTime({
-                        d: Math.floor(diff / 86400000),
-                        h: Math.floor((diff / 3600000) % 24),
-                        m: Math.floor((diff / 60000) % 60),
-                        s: Math.floor((diff / 1000) % 60),
-                    });
-                };
-                update();
-                const id = setInterval(update, 1000);
-                return () => clearInterval(id);
-            }, []);
-            
-            return (
-                <div className="relative min-h-screen overflow-hidden bg-ink-900">
-                    <div className="absolute inset-0 bg-grid-pattern opacity-40" />
-                    <div className="absolute inset-0 bg-radial-gold" />
-                    <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-champagne-400/10 blur-3xl" />
-                    
-                    <header className="relative z-20 flex items-center justify-between px-6 md:px-10 py-5">
-                        <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow">
-                                <svg className="w-5 h-5 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                                </svg>
-                            </div>
-                            <div>
-                                <div className="text-sm font-semibold tracking-tight text-white">EVENT COMMANDER</div>
-                                <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Operating System</div>
-                            </div>
-                        </div>
-                        <Button onClick={onEnter} size="sm">Launch Demo →</Button>
-                    </header>
-                    
-                    <section className="relative z-10 px-6 md:px-10 pt-10 md:pt-16 pb-24 max-w-7xl mx-auto">
-                        <div className="text-center mb-12">
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-champagne-400/20 bg-champagne-400/5 text-xs text-champagne-300 mb-6">
-                                ✨ Introducing Event Commander 1.0
-                            </div>
-                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.02em] leading-[1.02] text-white">
-                                Run your entire event from{' '}
-                                <span className="text-gold-gradient">one command center.</span>
-                            </h1>
-                            <p className="mt-6 text-base md:text-lg text-white/60 max-w-xl mx-auto">
-                                Event Commander brings attendees, speakers, sponsors, tickets, engagement, payments and event intelligence into one powerful operating system.
-                            </p>
-                            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                                <Button size="lg" onClick={onEnter}>Launch Demo →</Button>
-                                <Button variant="ghost" size="lg" onClick={onEnter}>Explore Platform</Button>
-                            </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 max-w-3xl mx-auto">
-                            {[
-                                { label:'Attendees', value: EVENT.attendees },
-                                { label:'Speakers', value: EVENT.speakers },
-                                { label:'Sponsors', value: EVENT.sponsors },
-                                { label:'Sessions', value: EVENT.sessions },
-                                { label:'Engagement', value: EVENT.engagement, suffix:'%' },
-                            ].map((m, i) => (
-                                <div key={m.label} className="text-center">
-                                    <div className="text-2xl md:text-3xl font-semibold text-white">
-                                        <Counter to={m.value} />{m.suffix}
-                                    </div>
-                                    <div className="text-[11px] uppercase tracking-[0.18em] text-white/40 mt-1">{m.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        <div className="mt-20 relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950">
-                            <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-                            <div className="relative p-8 md:p-12">
-                                <div className="text-[11px] uppercase tracking-[0.25em] text-champagne-400 mb-4">Flagship Event</div>
-                                <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-white">{EVENT.name}</h3>
-                                <p className="mt-3 text-lg text-white/60 italic">{EVENT.tagline}</p>
-                                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/70">
-                                    <div>🌍 {EVENT.city}, {EVENT.country}</div>
-                                    <div>{EVENT.dates}</div>
-                                    <div className="text-white/50">{EVENT.venue}</div>
-                                </div>
-                                <div className="mt-8 grid grid-cols-4 gap-3 max-w-md">
-                                    {[
-                                        { l:'Days', v: time.d },
-                                        { l:'Hours', v: time.h },
-                                        { l:'Minutes', v: time.m },
-                                        { l:'Seconds', v: time.s },
-                                    ].map(u => (
-                                        <div key={u.l} className="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
-                                            <div className="text-2xl md:text-3xl font-semibold text-gold-gradient">{String(u.v).padStart(2,'0')}</div>
-                                            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">{u.l}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            );
-        }
-        
-        // ============ ROLE SELECT ============
-        
-        function RoleSelect({ onSelect }) {
-            return (
-                <div className="min-h-screen bg-ink-900 relative overflow-hidden flex items-center justify-center p-6">
-                    <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-champagne-400/10 blur-3xl rounded-full" />
-                    
-                    <div className="relative max-w-4xl w-full">
-                        <div className="text-center mb-10">
-                            <div className="text-[11px] uppercase tracking-[0.25em] text-champagne-400 mb-3">Choose your experience</div>
-                            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-white">Enter the Command Center.</h1>
-                            <p className="mt-3 text-white/50 max-w-xl mx-auto">Select how you'd like to explore Event Commander.</p>
-                        </div>
-                        
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <button onClick={() => onSelect('attendee')} className="group glass rounded-3xl p-8 border border-white/5 hover:border-champagne-400/30 transition text-left relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-                                <div className="relative">
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow mb-5">
-                                        <svg className="w-7 h-7 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                                    </div>
-                                    <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Attendee Experience</div>
-                                    <div className="text-2xl font-semibold text-white mb-2">Join the Event</div>
-                                    <p className="text-sm text-white/55 leading-relaxed mb-5">Access your digital ticket, explore the agenda, network with attendees, engage with speakers and earn points.</p>
-                                    <div className="flex items-center gap-2 text-sm text-champagne-300 font-medium">Enter as Graham Esonga →</div>
-                                </div>
-                            </button>
-                            
-                            <button onClick={() => onSelect('organizer')} className="group glass rounded-3xl p-8 border border-white/5 hover:border-champagne-400/30 transition text-left relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-                                <div className="relative">
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow mb-5">
-                                        <svg className="w-7 h-7 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
-                                    </div>
-                                    <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Organizer Command Center</div>
-                                    <div className="text-2xl font-semibold text-white mb-2">Run the Event</div>
-                                    <p className="text-sm text-white/55 leading-relaxed mb-5">Full operational control — attendance, revenue, speakers, sponsors, AI insights, live operations and Command Mode.</p>
-                                    <div className="flex items-center gap-2 text-sm text-champagne-300 font-medium">Enter Command Center →</div>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-        
-        // ============ ATTENDEE ============
-        
-        function Attendee({ onBack }) {
-            const [section, setSection] = useState('home');
-            const [savedSessions, setSavedSessions] = useState(['s3','s5']);
-            const [notifications, setNotifications] = useState(NOTIFICATIONS);
-            const [toast, setToast] = useState(null);
-            
-            const showToast = (msg) => {
-                setToast(msg);
-                setTimeout(() => setToast(null), 3000);
-            };
-            
-            const unread = notifications.filter(n => !n.read).length;
-            
-            return (
-                <div className="min-h-screen bg-ink-900">
-                    <header className="sticky top-0 z-30 glass border-b border-white/5">
-                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
-                            <div className="flex items-center gap-3">
-                                <Avatar name={CURRENT_USER.name} size={38} />
-                                <div>
-                                    <div className="text-xs text-white/50">Good morning,</div>
-                                    <div className="text-sm font-semibold text-white">{CURRENT_USER.firstName}.</div>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Badge tone="gold" dot>ABS 2026</Badge>
-                                <Badge tone="green" dot>Day 1 — Live</Badge>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <button onClick={() => setSection('notifications')} className="relative w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                                    <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                                    {unread > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-ember-500 text-[10px] font-bold text-white flex items-center justify-center">{unread}</span>}
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-                    
-                    <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-28">
-                        {section === 'home' && (
-                            <div className="space-y-8">
-                                <div>
-                                    <div className="text-xs uppercase tracking-[0.2em] text-champagne-400/80">Welcome to</div>
-                                    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mt-1">Africa Business Summit 2026.</h1>
-                                    <p className="text-white/50 mt-2">Nairobi, Kenya · Day 1 of 3</p>
-                                </div>
-                                
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    {[
-                                        { l:'Your Points', v: CURRENT_USER.points, icon:'⚡' },
-                                        { l:'Connections', v: CURRENT_USER.connections, icon:'🤝' },
-                                        { l:'Saved Sessions', v: savedSessions.length, icon:'📌' },
-                                        { l:'Rank', v:'#3', icon:'🏆' },
-                                    ].map(s => (
-                                        <Card key={s.l} className="p-4">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <div className="text-[11px] uppercase tracking-wider text-white/40">{s.l}</div>
-                                                    <div className="text-2xl font-semibold text-white mt-1">{s.v}</div>
-                                                </div>
-                                                <div className="text-2xl">{s.icon}</div>
-                                            </div>
-                                        </Card>
-                                    ))}
-                                </div>
-                                
-                                <div>
-                                    <h2 className="text-xl font-semibold text-white mb-4">Today's Schedule</h2>
-                                    <div className="space-y-2">
-                                        {SESSIONS.slice(0, 4).map(s => (
-                                            <Card key={s.id} className="p-4 flex items-center gap-4">
-                                                <div className="flex-shrink-0 w-16 text-center">
-                                                    <div className="text-sm font-semibold text-champagne-300">{s.time}</div>
-                                                    <div className="text-[10px] text-white/40 uppercase">{s.track}</div>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="text-sm font-medium text-white">{s.title}</div>
-                                                        {s.live && <Badge tone="green" dot>LIVE</Badge>}
-                                                    </div>
-                                                    <div className="text-xs text-white/50 mt-0.5">{ROOMS.find(r => r.id === s.room)?.name} · {s.attendees} attending</div>
-                                                </div>
-                                                <button onClick={() => { setSavedSessions(prev => prev.includes(s.id) ? prev.filter(x => x !== s.id) : [...prev, s.id]); showToast('Session saved'); }} className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center">
-                                                    <svg className={`w-4 h-4 ${savedSessions.includes(s.id) ? 'text-champagne-300' : 'text-white/50'}`} fill={savedSessions.includes(s.id) ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
-                                                </button>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        
-                        {section === 'ticket' && (
-                            <div className="max-w-2xl mx-auto">
-                                <h1 className="text-3xl font-semibold text-white mb-6">Your Digital Ticket</h1>
-                                <Card className="p-6 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent pointer-events-none" />
-                                    <div className="relative">
-                                        <div className="text-[10px] uppercase tracking-[0.25em] text-champagne-300">Event Commander presents</div>
-                                        <div className="text-2xl font-semibold text-white mt-1">AFRICA BUSINESS SUMMIT</div>
-                                        <div className="text-gold-gradient text-sm font-medium">2026 · NAIROBI</div>
-                                        
-                                        <div className="mt-6 grid grid-cols-2 gap-4">
-                                            <div>
-                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Attendee</div>
-                                                <div className="text-base font-semibold text-white mt-1">{CURRENT_USER.name}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Pass Type</div>
-                                                <div className="text-base font-semibold text-champagne-300 mt-1">{CURRENT_USER.pass} PASS</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Date</div>
-                                                <div className="text-sm font-medium text-white mt-1">Oct 14–16, 2026</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Venue</div>
-                                                <div className="text-sm font-medium text-white mt-1">KICC, Nairobi</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="mt-6 p-3 border-y border-white/5 bg-white/[0.02] flex items-center justify-between">
-                                            <div>
-                                                <div className="text-[10px] uppercase tracking-wider text-white/40">Ticket ID</div>
-                                                <div className="text-sm font-mono font-semibold text-white">{CURRENT_USER.id}</div>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-emerald-300 text-xs font-semibold">
-                                                <span className="live-dot" /> VERIFIED
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="mt-6 flex flex-col items-center">
-                                            <div className="p-4 bg-pearl rounded-2xl">
-                                                <svg width="200" height="200" viewBox="0 0 200 200" className="text-ink-900">
-                                                    <rect width="200" height="200" fill="#f5f5f0" />
-                                                    {/* Simplified QR pattern */}
-                                                    {Array.from({ length: 29 }).map((_, y) =>
-                                                        Array.from({ length: 29 }).map((_, x) => {
-                                                            const isFinder = (x < 7 && y < 7) || (x >= 22 && y < 7) || (x < 7 && y >= 22);
-                                                            const dark = isFinder || Math.random() > 0.5;
-                                                            return dark ? <rect key={`${x}-${y}`} x={x*6.9} y={y*6.9} width="6.9" height="6.9" fill="currentColor" /> : null;
-                                                        })
-                                                    )}
-                                                </svg>
-                                            </div>
-                                            <div className="text-xs text-white/40 mt-3">Scan at entry</div>
-                                        </div>
-                                        
-                                        <div className="mt-6 grid grid-cols-2 gap-3">
-                                            <Button variant="ghost">📱 Add to Wallet</Button>
-                                            <Button variant="outline">📤 Share Ticket</Button>
-                                        </div>
-                                    </div>
-                                </Card>
-                            </div>
-                        )}
-                        
-                        {section === 'notifications' && (
-                            <div>
-                                <h1 className="text-3xl font-semibold text-white mb-6">Notifications</h1>
-                                <div className="space-y-2">
-                                    {notifications.map(n => (
-                                        <Card key={n.id} className={`p-4 flex items-start gap-3 ${!n.read && 'border-champagne-400/20'}`}>
-                                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${n.priority === 'high' ? 'bg-ember-500/20 text-ember-400' : 'bg-champagne-400/15 text-champagne-300'}`}>
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="flex items-center justify-between">
-                                                    <div className="text-sm font-medium text-white">{n.title}</div>
-                                                    <div className="text-[11px] text-white/40">{n.time}</div>
-                                                </div>
-                                                <div className="text-xs text-white/55 mt-1">{n.message}</div>
-                                            </div>
-                                            {!n.read && <button onClick={() => { setNotifications(prev => prev.map(x => x.id === n.id ? {...x, read: true} : x)); showToast('Marked as read'); }} className="text-[11px] text-champagne-300">Mark read</button>}
-                                        </Card>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </main>
-                    
-                    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 glass border-t border-white/10 px-2 py-2 flex items-center justify-around">
-                        {[
-                            { id:'home', label:'Home', icon:'🏠' },
-                            { id:'agenda', label:'Agenda', icon:'📅' },
-                            { id:'ticket', label:'Ticket', icon:'🎫' },
-                            { id:'network', label:'Network', icon:'🤝' },
-                            { id:'profile', label:'Profile', icon:'👤' },
-                        ].map(t => (
-                            <button key={t.id} onClick={() => setSection(t.id)} className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl ${section === t.id ? 'text-champagne-300' : 'text-white/50'}`}>
-                                <span className="text-xl">{t.icon}</span>
-                                <span className="text-[10px] font-medium">{t.label}</span>
-                            </button>
-                        ))}
-                    </nav>
-                    
-                    {toast && (
-                        <div className="fixed bottom-24 md:bottom-6 right-6 z-50 glass rounded-xl px-4 py-3 border border-white/10 shadow-soft flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                            <div className="text-sm text-white/90">{toast}</div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-        
-        // ============ ORGANIZER ============
-        
-        function Organizer({ onBack }) {
-            const [section, setSection] = useState('overview');
-            
-            return (
-                <div className="min-h-screen bg-ink-900 flex">
-                    <aside className="hidden lg:flex w-72 glass border-r border-white/5 flex-col">
-                        <div className="p-5 border-b border-white/5">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center shadow-glow">
-                                    <svg className="w-5 h-5 text-ink-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
-                                </div>
-                                <div>
-                                    <div className="text-sm font-semibold text-white">EVENT COMMANDER</div>
-                                    <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Command Center</div>
-                                </div>
-                            </div>
-                        </div>
-                        <nav className="flex-1 overflow-y-auto p-3">
-                            {[
-                                { id:'overview', label:'Overview', icon:'📊' },
-                                { id:'attendance', label:'Attendance', icon:'👥' },
-                                { id:'tickets', label:'Tickets', icon:'🎫' },
-                                { id:'sessions', label:'Sessions', icon:'📅' },
-                                { id:'speakers', label:'Speakers', icon:'🎤' },
-                                { id:'sponsors', label:'Sponsors', icon:'🏢' },
-                                { id:'revenue', label:'Revenue', icon:'💰' },
-                                { id:'intelligence', label:'Intelligence', icon:'🧠' },
-                                { id:'operations', label:'Operations', icon:'⚙️' },
-                            ].map(item => (
-                                <button key={item.id} onClick={() => setSection(item.id)} className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm mb-1 ${section === item.id ? 'bg-champagne-400/15 text-champagne-300 border border-champagne-400/20' : 'text-white/60 hover:bg-white/5'}`}>
-                                    <span>{item.icon}</span>
-                                    <span>{item.label}</span>
-                                </button>
-                            ))}
-                        </nav>
-                    </aside>
-                    
-                    <div className="flex-1">
-                        <header className="sticky top-0 z-30 glass border-b border-white/5">
-                            <div className="px-4 md:px-8 py-3 flex items-center justify-between">
-                                <div>
-                                    <div className="text-[10px] uppercase tracking-[0.2em] text-champagne-400/70">Command Center</div>
-                                    <div className="text-sm font-semibold text-white">{EVENT.name}</div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Badge tone="green" dot>LIVE</Badge>
-                                    <Badge>Day 1 · 09:42 AM</Badge>
-                                </div>
-                            </div>
-                        </header>
-                        
-                        <main className="px-4 md:px-8 py-6">
-                            {section === 'overview' && (
-                                <div>
-                                    <h1 className="text-3xl font-semibold text-white mb-6">Event Command Center</h1>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6">
-                                        {[
-                                            { l:'Attendees', v: 2847, d:'+18.4%' },
-                                            { l:'Checked In', v: 2391, d:'84%' },
-                                            { l:'Revenue', v: 'KES 18.7M', d:'+12.6%' },
-                                            { l:'Engagement', v: '91.4%', d:'+7.2%' },
-                                            { l:'Sponsors', v: 42 },
-                                            { l:'Sessions', v: 18 },
-                                        ].map(s => (
-                                            <Card key={s.l} className="p-5">
-                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
-                                                <div className="text-2xl font-semibold text-white mt-2">{s.v}</div>
-                                                {s.d && <div className="text-xs text-emerald-400 mt-1">▲ {s.d}</div>}
-                                            </Card>
-                                        ))}
-                                    </div>
-                                    
-                                    <Card className="p-6 mb-4">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="text-sm font-semibold text-white">Live Attendance</div>
-                                            <Badge tone="green" dot>Live</Badge>
-                                        </div>
-                                        <div className="text-4xl font-semibold text-white">2,391 <span className="text-white/40 text-lg">/ 2,847</span></div>
-                                        <div className="mt-3"><Progress value={84} /></div>
-                                    </Card>
-                                    
-                                    <Card className="p-6 relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-champagne-400/10 to-transparent pointer-events-none" />
-                                        <div className="relative flex items-start gap-4">
-                                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-champagne-300 to-champagne-600 flex items-center justify-center flex-shrink-0 shadow-glow">
-                                                <span className="text-xl">✨</span>
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="text-[11px] uppercase tracking-[0.2em] text-champagne-400 mb-1">Commander Insight</div>
-                                                <div className="text-sm text-white/90">
-                                                    <strong>AI & The Future of African Business</strong> is currently the highest-engaged session, with <strong>94% attendee participation</strong>.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </div>
-                            )}
-                            
-                            {section === 'attendance' && (
-                                <div>
-                                    <h1 className="text-3xl font-semibold text-white mb-6">Attendance Analytics</h1>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                                        {[
-                                            { l:'Registered', v: 2847 },
-                                            { l:'Checked In', v: 2391 },
-                                            { l:'No-show Rate', v: '16%' },
-                                            { l:'Avg Session', v: '84%' },
-                                        ].map(s => (
-                                            <Card key={s.l} className="p-5">
-                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
-                                                <div className="text-2xl font-semibold text-white mt-2">{s.v}</div>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            
-                            {section === 'revenue' && (
-                                <div>
-                                    <h1 className="text-3xl font-semibold text-white mb-6">Revenue Dashboard</h1>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                                        {[
-                                            { l:'Total Revenue', v: 'KES 103.6M' },
-                                            { l:'Tickets', v: 'KES 77.1M' },
-                                            { l:'Sponsors', v: 'KES 20.5M' },
-                                            { l:'Target', v: '87%' },
-                                        ].map(s => (
-                                            <Card key={s.l} className="p-5">
-                                                <div className="text-xs uppercase tracking-wider text-white/40">{s.l}</div>
-                                                <div className="text-2xl font-semibold text-champagne-300 mt-2">{s.v}</div>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            
-                            {section === 'intelligence' && (
-                                <div>
-                                    <h1 className="text-3xl font-semibold text-white mb-6">Event Intelligence</h1>
-                                    <Card className="p-8 mb-6">
-                                        <div className="text-center">
-                                            <div className="text-6xl font-semibold text-gold-gradient">91.8</div>
-                                            <div className="text-sm text-white/50 mt-2">Event Success Score</div>
-                                        </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">
-                                            {[
-                                                { l:'Event Health', v: 92 },
-                                                { l:'Attendance', v: 88 },
-                                                { l:'Engagement', v: 94 },
-                                                { l:'Sponsors', v: 89 },
-                                                { l:'Revenue', v: 91 },
-                                                { l:'Networking', v: 87 },
-                                            ].map(s => (
-                                                <div key={s.l} className="rounded-xl bg-white/5 border border-white/5 p-3">
-                                                    <div className="text-xs text-white/60">{s.l}</div>
-                                                    <div className="text-xl font-semibold text-white mt-1">{s.v}/100</div>
-                                                    <div className="mt-2"><Progress value={s.v} /></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </Card>
-                                </div>
-                            )}
-                        </main>
-                    </div>
-                </div>
-            );
-        }
-        
-        // ============ APP ============
-        
-        function App() {
-            const [view, setView] = useState('landing');
-            const [role, setRole] = useState(null);
-            
-            return (
-                <div>
-                    {view === 'landing' && <Landing onEnter={() => setView('role')} />}
-                    {view === 'role' && <RoleSelect onSelect={(r) => { setRole(r); setView(r); }} />}
-                    {view === 'attendee' && <Attendee />}
-                    {view === 'organizer' && <Organizer />}
-                </div>
-            );
-        }
-        
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+    }
+});
+
+/* ============ INIT ============ */
+window.addEventListener('load',()=>{
+    animateCounters();
+    drawSparklines();
+    buildPerformanceChart();
+    buildSpendChart();
+    buildNetwork();
+    renderSuppliers();
+    renderNotifs();
+    setTimeout(()=>showToast('🚀 SUPPLY360 Intelligence Platform loaded','success'),800);
+});
+
+window.addEventListener('resize',drawSparklines);
+</script>
 </body>
 </html>
